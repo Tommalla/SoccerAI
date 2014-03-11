@@ -1,8 +1,10 @@
 set(HEADERS
+	AI.hpp
 	AlfaBetaTree.hpp
 )
 
 set(SOURCES
+	AI.cpp
 	AlfaBetaTree.cpp
 )
 
