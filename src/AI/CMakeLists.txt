@@ -1,11 +1,11 @@
 set(HEADERS
 	AI.hpp
-	AlfaBetaTree.hpp
+	AlphaBetaTree.hpp
 )
 
 set(SOURCES
 	AI.cpp
-	AlfaBetaTree.cpp
+	AlphaBetaTree.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})
