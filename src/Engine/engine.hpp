@@ -1,8 +1,11 @@
+#include <cstdint>
+
 #include <utility>
 
 namespace engine {
+	typedef int8_t Coord;
 	typedef int Field;
-	typedef std::pair<int8_t, int8_t> Direction;
+	typedef std::pair<Coord, Coord> Move;
 
-	const Direction directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
+	const Move directions[] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 };

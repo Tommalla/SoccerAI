@@ -9,3 +9,4 @@ set(SOURCES
 )
 
 add_executable(SoccerAI ${SOURCES} ${HEADERS})
+target_link_libraries(SoccerAI Engine AI)
