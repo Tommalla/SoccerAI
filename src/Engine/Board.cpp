@@ -55,6 +55,14 @@ bool Board::isRedActive() const {
 	return playerRed;
 }
 
+Field Board::positionToField(const Position& pos) const {
+	return pos.second * width + pos.first;
+}
+
+Position Board::fieldToPosition(const Field field) const {
+	return Position{field % width, field / width};
+}
+
 int Board::getDirectionBetween(const Field a, const Field b) const {
 	assert(isValid(a));
 	assert(isValid(b));

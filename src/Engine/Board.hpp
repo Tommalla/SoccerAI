@@ -36,6 +36,8 @@ public:
 	 * Invariant: either Blue or Red player is active.
 	 */
 	bool isRedActive() const;
+	engine::Field positionToField(const engine::Position& pos) const;
+	engine::Position fieldToPosition(const engine::Field field) const;
 
 	const engine::Move directions[8];
 	const static int directionsQty = 8;
