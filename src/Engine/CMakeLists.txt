@@ -8,3 +8,4 @@ set(SOURCES
 )
 
 add_library(Engine ${HEADERS} ${SOURCES})
+add_subdirectory(tests)
