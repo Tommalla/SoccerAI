@@ -29,6 +29,9 @@ bool Board::play(const Move move) {
 	connect(position, dst);
 	position = dst;
 
+	if (res)
+		playerRed = !playerRed;
+
 	return res;
 }
 

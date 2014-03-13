@@ -41,6 +41,9 @@ public:
 	const static int directionsQty = 8;
 
 private:
+	/**
+	 * @brief Returns the id of direction between 2 points. -1 if points aren't adjacent.
+	 */
 	inline int getDirectionBetween(const engine::Field a, const engine::Field b) const;
 	/**
 	 * @brief Returns true if there is an edge between fields a and b.
