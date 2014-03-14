@@ -24,6 +24,10 @@ public:
 	 */
 	bool play(const engine::Move move);
 	/**
+	 * @brief Undoes a move if it is possible that it was the last move done.
+	 */
+	void undo(const engine::Move move, const bool changePlayer = false);
+	/**
 	 * @brief Returns the field the ball is currently on.
 	 */
 	engine::Field getField() const;

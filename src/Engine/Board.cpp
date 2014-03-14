@@ -35,6 +35,20 @@ bool Board::play(const Move move) {
 	return res;
 }
 
+void Board::undo(const Move move, const bool changePlayer) {
+	Field dst = position + move;
+	assert(isValid(dst));
+	assert(isEdgeBetween(position, dst));
+
+	int id = getDirectionBetween(position, dst);
+	edges[position] ^= 1 << id;
+
+	position = dst;
+	if (changePlayer)
+		playerRed = !playerRed;
+
+}
+
 Field Board::getField() const {
 	return position;
 }
