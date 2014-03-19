@@ -95,7 +95,7 @@ vector<Move> Board::getMoves() const {
 
 	for (const auto& d: directions) {
 		Field dst = position + d;
-		if (isValid(dst) && !isEdgeBetween(position, dst))
+		if (canGoTo(dst))
 			res.push_back(d);
 	}
 
@@ -147,13 +147,13 @@ void Board::connect(const Field a, const Field b) {
 }
 
 bool Board::canGoTo(const Field x) const {
-	assert(isValid(x));
 	int dir = getDirectionBetween(position, x);
-	return dir >= 0 && !isEdgeBetween(position, x);
+	return dir >= 0 && isValid(x) && !isEdgeBetween(position, x) &&
+	!(isOnBorder(position) && isOnBorder(x));
 }
 
 bool Board::isValid(const Field x) const {
-    //FIXME optimize this
+	//FIXME optimize this
 	return (x >= width && x <= width * (height - 1)) ||
 		(x >= width / 2 - 1 && x <= width / 2 + 1) ||
 		(x >= width * (height - 1) + width / 2 - 1 && x <= width * (height - 1) + width / 2 + 1);
@@ -161,16 +161,9 @@ bool Board::isValid(const Field x) const {
 
 bool Board::isOnBorder(const Field x) const {
 	Position pos = fieldToPosition(x);
-	return ((pos.first == 0 || pos.first == width) && pos.second > 0 && pos.second < height) ||
-		((pos.second == 1 || pos.second == height - 1) && pos.first >= width / 2 - 1 && pos.first <= width / 2 + 1) ||
-		((pos.second == 0 || pos.second == height) && pos.first >= width / 2 - 1 && pos.first <= width / 2 + 1);
+	Coord w = width - 1;
+	Coord h = height - 1;
+	return ((pos.first == 0 || pos.first == w) && pos.second > 0 && pos.second < h) ||
+		((pos.second == 1 || pos.second == h - 1) && pos.first >= w / 2 - 1 && pos.first <= w / 2 + 1) ||
+		((pos.second == 0 || pos.second == h) && pos.first >= w / 2 - 1 && pos.first <= w / 2 + 1);
 }
-
-
-
-
-
-
-
-
-

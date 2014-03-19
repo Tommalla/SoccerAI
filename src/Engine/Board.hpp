@@ -51,7 +51,7 @@ public:
 	bool isEdgeBetween(const engine::Field a, const engine::Field b) const;
 
 	const std::vector<engine::Move> directions;
-    //TODO add const static values for direction names
+	//TODO add const static values for direction names
 
 private:
 	/**
