@@ -14,6 +14,9 @@
 class Board {
 public:
 	Board(const engine::Coord width, const engine::Coord height);
+	Board(const Board& other);
+	Board& operator=(const Board& other) = delete;
+
 	~Board();
 	/**
 	 * @brief Plays the move. If the move's invalid, it will be found
@@ -43,8 +46,8 @@ public:
 	engine::Field positionToField(const engine::Position& pos) const;
 	engine::Position fieldToPosition(const engine::Field field) const;
 
-	const engine::Move directions[8];
-	const static int directionsQty = 8;
+	const std::vector<engine::Move> directions;
+    //TODO add const static values for direction names
 
 private:
 	/**
@@ -69,6 +72,10 @@ private:
 	 * @return bool
 	 */
 	bool isValid(const engine::Field x) const;
+	/**
+	 * @brief Returns true if point is on border.
+	 */
+	bool isOnBorder(const engine::Field x) const;
 
 	uint8_t* edges;
 	engine::Field position;
