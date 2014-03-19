@@ -13,7 +13,7 @@
  */
 class Board {
 public:
-	Board(const engine::Coord width, const engine::Coord height);
+	Board(engine::Coord width, engine::Coord height);
 	Board(const Board& other);
 	Board& operator=(const Board& other) = delete;
 
@@ -45,6 +45,10 @@ public:
 	bool isRedActive() const;
 	engine::Field positionToField(const engine::Position& pos) const;
 	engine::Position fieldToPosition(const engine::Field field) const;
+	/**
+	 * @brief Returns true if there is an edge between fields a and b.
+	 */
+	bool isEdgeBetween(const engine::Field a, const engine::Field b) const;
 
 	const std::vector<engine::Move> directions;
     //TODO add const static values for direction names
@@ -54,10 +58,6 @@ private:
 	 * @brief Returns the id of direction between 2 points. -1 if points aren't adjacent.
 	 */
 	inline int getDirectionBetween(const engine::Field a, const engine::Field b) const;
-	/**
-	 * @brief Returns true if there is an edge between fields a and b.
-	 */
-	bool isEdgeBetween(const engine::Field a, const engine::Field b) const;
 	/**
 	 * @brief Connects field a and b with an edge (adequate to move).
 	 */

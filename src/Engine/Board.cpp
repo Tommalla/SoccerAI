@@ -6,16 +6,42 @@
 using std::vector;
 using namespace engine;
 
-Board::Board(const Coord width, const Coord height)
+Board::Board(Coord width, Coord height)
 : directions{-width - 2, -width - 1, -width,
 		-1, +1,
 		width, width + 1, width + 2}
 , width{(Coord)(width + 1)}
 , height{(Coord)(height + 1)} {
-	edges = new uint8_t[this->width * this->height];
-	position = (this->height / 2) * this->width + this->width / 2;
+	++width;
+	++height;
+	edges = new uint8_t[width * height];
+	position = (height / 2) * width + width / 2;
 	playerRed = true; //red starts
-	//TODO add borders
+
+	//add borders
+	Field f;
+	for (f = 3; f < 5; ++f) {
+		connect(f, f + 1);	//upper goalpost
+		connect(f + width * (height - 1), f + width * (height - 1) + 1);	//bottom goalpost
+	}
+
+	for (f = 0 + width; f < 3 + width; ++f) {
+		connect(f, f + 1);	//top line (left)
+		connect(f + width * (height - 3), f + width * (height - 3) + 1);	//bottom line (left)
+
+		connect(3 * width - f - 1, 3 * width - f - 2);	//top line (right)
+		connect(width * height - 1 - f, width * height - 1 - f - 1);	//bottom line (right)
+	}
+
+	connect(3, 3 + width);
+	connect(5, 5 + width);
+	connect(height * width - 1 - 3, (height - 1) * width - 1 - 3);
+	connect(height * width - 1 - 5, (height - 1) * width - 1 - 5);
+
+	for (f = width; f < (height - 2) * width; f += width) {
+		connect(f, f + width);	//left border
+		connect(f + width - 1, f + 2 * width - 1);	//right border
+	}
 }
 
 Board::Board(const Board& other)
@@ -88,16 +114,6 @@ Position Board::fieldToPosition(const Field field) const {
 	return Position{field % width, field / width};
 }
 
-int Board::getDirectionBetween(const Field a, const Field b) const {
-	assert(isValid(a));
-	assert(isValid(b));
-	Field tmp = b - a;
-	for (int i = 0; i < directions.size(); ++i)
-		if (directions[i] == tmp)
-			return i;
-	return -1;
-}
-
 bool Board::isEdgeBetween(const Field a, const Field b) const {
 	assert(isValid(a));
 	assert(isValid(b));
@@ -106,6 +122,16 @@ bool Board::isEdgeBetween(const Field a, const Field b) const {
 		return false;
 
 	return (1 << dir) & edges[a];
+}
+
+int Board::getDirectionBetween(const Field a, const Field b) const {
+	assert(isValid(a));
+	assert(isValid(b));
+	Field tmp = b - a;
+	for (int i = 0; i < (int)directions.size(); ++i)
+		if (directions[i] == tmp)
+			return i;
+	return -1;
 }
 
 void Board::connect(const Field a, const Field b) {
@@ -128,7 +154,7 @@ bool Board::canGoTo(const Field x) const {
 
 bool Board::isValid(const Field x) const {
     //FIXME optimize this
-	return (x > width && x <= width * (height - 1)) ||
+	return (x >= width && x <= width * (height - 1)) ||
 		(x >= width / 2 - 1 && x <= width / 2 + 1) ||
 		(x >= width * (height - 1) + width / 2 - 1 && x <= width * (height - 1) + width / 2 + 1);
 }
