@@ -1,10 +1,11 @@
 #include <stack>
 
 #include "../Engine/engine.hpp"
+#include "../Engine/Board.hpp"
 
 class AI {
 public:
-	AI(const engine::Coord width, const engine::Coord heigth);
+	AI(const engine::Coord width, const engine::Coord height);
 
 	/**
 	 * @brief Acknowledges the playout of the move.
@@ -21,4 +22,5 @@ public:
 	virtual void undo();
 private:
 	std::stack<engine::Move> history;
+	Board board;
 };

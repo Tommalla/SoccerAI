@@ -4,12 +4,11 @@
 
 using namespace engine;
 
-AI::AI(const engine::Coord width, const engine::Coord heigth) {
-	//TODO empty for now
-}
+AI::AI(const engine::Coord width, const engine::Coord height)
+: board{width, height} {}
 
 void AI::play(const Move& move) {
-	//TODO (need Board implementation for this to work)
+	board.play(move);
 	history.push(move);
 }
 
