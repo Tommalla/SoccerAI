@@ -9,6 +9,8 @@ typedef int16_t DirId;
  * Has to be able to perform moves and return info about the state of the game.
  * It needs to remember the last player.
  *
+ * The coordinates on the Board start from (1,1) (left upper corner)
+ *
  * This class uses assertions heavily to assure the correctness. For performance,
  * compile with -DNDEBUG.
  *
@@ -104,10 +106,8 @@ private:
 	 * @return bool
 	 */
 	bool isValid(const engine::Field x) const;
-	/**
-	 * @brief Returns true if point is on border.
-	 */
-	bool isOnBorder(const engine::Field x) const;
+	void addGuardAt(engine::Field x);
+	void tryConnect(const engine::Field x, const DirId dirId);
 
 	uint8_t* edges;
 	engine::Field position;
