@@ -11,10 +11,13 @@ Board::Board(Coord width, Coord height)
 		-1, +1,
 		width + 2, width + 3, width + 4}
 , width{(Coord)(width + 3)}
-, height{(Coord)(height + 3)} {
+, height{(Coord)(height + 3)}
+, gameFinished{false} {
 	width += 3;
 	height += 3;
 	edges = new uint8_t[width * height];
+	for (int i = 0; i < width * height; ++i)
+		edges[i] = 0;
 	position = (height / 2) * width + width / 2;
 	playerRed = true; //red starts
 
@@ -47,7 +50,10 @@ Board::Board(const Board& other)
 , position{other.position}
 , width{other.width}
 , height{other.height}
-, playerRed{other.playerRed} {}
+, playerRed{other.playerRed} {
+	for (int i = 0; i < width * height; ++i)
+		edges[i] = other.edges[i];
+}
 
 Board::~Board() {
 	delete[] edges;
@@ -69,6 +75,8 @@ bool Board::play(const DirId moveId) {
 
 	if (res)
 		playerRed = !playerRed;
+
+	res |= updateGameFinished();
 
 	return res;
 }
@@ -123,6 +131,14 @@ Position Board::fieldToPosition(const Field field) const {
 	return Position{field % width, field / width};
 }
 
+bool Board::isGameFinished() const {
+	return gameFinished;
+}
+
+bool Board::doesRedWin() const {
+	return gameFinished && playerRed;
+}
+
 DirId Board::getDirectionBetween(const Field a, const Field b) const {
 	assert(isValid(a));
 	assert(isValid(b));
@@ -156,22 +172,7 @@ bool Board::canGo(const DirId dirId) const {
 }
 
 bool Board::isValid(const Field x) const {
-	//FIXME optimize this
 	return x >= 0 && x < width * height;
-}
-
-bool Board::isEdgeBetween(const Field a, const Field b) const {
-	int dir = getDirectionBetween(a, b);
-	return isEdgeFrom(a, dir);
-}
-
-bool Board::isEdgeFrom(const Field a, const DirId dirId) const {
-	assert(isValid(a));
-	assert(isValid(a + directions[dirId]));
-
-	if (dirId == -1)
-		return false;
-	return (1 << dirId) & edges[a];
 }
 
 void Board::addGuardAt(Field x) {
@@ -192,3 +193,33 @@ void Board::tryConnect(const Field x, const DirId dirId) {
 		connect(x, dirId);
 }
 
+bool Board::isEdgeBetween(const Field a, const Field b) const {
+	int dir = getDirectionBetween(a, b);
+	return isEdgeFrom(a, dir);
+}
+
+bool Board::isEdgeFrom(const Field a, const DirId dirId) const {
+	assert(isValid(a));
+	assert(isValid(a + directions[dirId]));
+
+	if (dirId == -1)
+		return false;
+	return (1 << dirId) & edges[a];
+}
+
+bool Board::updateGameFinished() {
+	if (gameFinished)
+		return true;
+
+	if (position >= width + width / 2 - 1 && position <= width + width / 2 + 1) {
+		playerRed = gameFinished = true;
+	} else if (position >= (height - 1) * width - 2 - width / 2 && position <= (height - 1) * width + 1 - width / 2) {
+		playerRed = false;
+		gameFinished = true;
+	} else if (getMoves().size() == 0) {
+		gameFinished = true;
+		playerRed = !playerRed;
+	}
+
+	return gameFinished;
+}

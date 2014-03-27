@@ -68,10 +68,10 @@ public:
 	engine::Field positionToField(const engine::Position& pos) const;
 	engine::Position fieldToPosition(const engine::Field field) const;
 	/**
-	 * @brief Returns true if there is an edge between fields a and b.
+	 * @brief Returns true if the game is finished.
 	 */
-	bool isEdgeBetween(const engine::Field a, const engine::Field b) const;
-	bool isEdgeFrom(const engine::Field a, const DirId dirId) const;
+	bool isGameFinished() const;
+	bool doesRedWin() const;
 
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;
@@ -108,9 +108,22 @@ private:
 	bool isValid(const engine::Field x) const;
 	void addGuardAt(engine::Field x);
 	void tryConnect(const engine::Field x, const DirId dirId);
+	/**
+	 * @brief Returns true if there is an edge between fields a and b.
+	 */
+	bool isEdgeBetween(const engine::Field a, const engine::Field b) const;
+	bool isEdgeFrom(const engine::Field a, const DirId dirId) const;
+	/**
+	 * @brief This method checks if the game is finished in its' current state and if so, sets
+	 * the appropriate player as the winner.
+	 *
+	 * @return True if game is finished.
+	 */
+	bool updateGameFinished();
 
 	uint8_t* edges;
 	engine::Field position;
 	const engine::Coord width, height;
 	bool playerRed;
+	bool gameFinished;
 };
