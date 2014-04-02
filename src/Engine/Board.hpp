@@ -2,6 +2,9 @@
 
 #include "engine.hpp"
 
+#ifndef BOARD_HPP
+#define BOARD_HPP
+
 typedef int16_t DirId;
 
 /**
@@ -59,7 +62,7 @@ public:
 	/**
 	 * @brief Returns moves available from the current position.
 	 */
-	std::vector<engine::Move> getMoves() const;
+	std::vector<DirId> getMoves() const;
 	/**
 	 * @brief True if the active player is Red. False otherwise.
 	 * Invariant: either Blue or Red player is active.
@@ -127,3 +130,5 @@ private:
 	bool playerRed;
 	bool gameFinished;
 };
+
+#endif // BOARD_HPP

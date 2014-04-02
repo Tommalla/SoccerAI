@@ -108,12 +108,12 @@ Position Board::getPosition() const {
 	return fieldToPosition(position);
 }
 
-vector<Move> Board::getMoves() const {
-	vector<Move> res;
+vector< DirId > Board::getMoves() const {
+	vector<DirId> res;
 
 	for (DirId id = 0; id < (DirId)directions.size(); ++id) {
 		if (canGo(id))
-			res.push_back(directions[id]);
+			res.push_back(id);
 	}
 
 	return res;

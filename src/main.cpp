@@ -6,6 +6,7 @@
 #include <bits/algorithmfwd.h>
 
 #include "AI/AI.hpp"
+#include "AI/RandomAI.hpp"
 
 using namespace std;
 
@@ -27,14 +28,19 @@ int main() {
 
 	string line;
 	string command;
+	int w, h, t;
 
-	cin >> command;
-	assert(command == "boardsize");
-	int w, h;
-	cin >> w >> h;
-	printOK();
+	{
+		getline(cin, line);
+		stringstream ss(line);
+		ss >> command;
+		assert(command == "boardsize");
+		ss >> w >> h;
+		h += 2;
+		printOK();
+	}
 
-	unique_ptr<AI> ai; //= unique_ptr<AI>(new SomeAI(w, h, params));
+	unique_ptr<AI> ai = unique_ptr<AI>(new RandomAI(w, h));
 
 	while (getline(cin, line)) {
 		stringstream ss(line);
@@ -44,14 +50,15 @@ int main() {
 			DirId d;
 			ss >> d;
 			ai->play(dirMap[d]);
-			printNotSupported();
-		} else if (command == "gen_move") {
-			cout << reverseDirMap[ai->genMove()] << "\n\n";
-		} else if (command == "time_left") {
+			printOK();
+		} else if (command == "genmove") {
+			cout << "= " << reverseDirMap[ai->genMove()] << "\n\n";
+		} else if (command == "timeleft") {
+			ss >> t;
 			printNotSupported();
 		} else if (command == "undo") {
 			printNotSupported();
-		} else {
+		} else if (command.empty() == false) {
 			printNotSupported();
 		}
 
