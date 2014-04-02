@@ -55,16 +55,16 @@ int main() {
 	testGoalPost(Board::UP, Board::UP, true);
 
 	puts("\nTest right corner of upper goalpost");
-	testGoalPost({Board::UP, Board::UP, Board::UP, Board::UP, Board::UP, Board::RIGHT_UP}, true);
+	testGoalPost(Board::UP, Board::RIGHT_UP, true);
 
 	puts("\nTest left corner of lower goalpost");
-	testGoalPost({Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::LEFT_DOWN}, false);
+	testGoalPost(Board::DOWN, Board::LEFT_DOWN, false);
 
 	puts("\nTest middle of lower goalpost");
-	testGoalPost({Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN}, false);
+	testGoalPost(Board::DOWN, Board::DOWN, false);
 
 	puts("\nTest right corner of lower goalpost");
-	testGoalPost({Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::DOWN, Board::RIGHT_DOWN}, false);
+	testGoalPost(Board::DOWN, Board::RIGHT_DOWN, false);
 
 	puts("OK");
 	return 0;
