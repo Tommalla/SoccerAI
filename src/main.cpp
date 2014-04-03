@@ -51,13 +51,11 @@ int main() {
 			DirId d;
 			ss >> d;
 			ai->play(dirMap[d]);
-// 			fprintf(stderr, "Direction: %d, for me: %d\n", d, mapDir(d, false));
 			printOK();
 		} else if (command == "genmove") {
 			DirId res = ai->genMove();
 			cout << "= " << reverseDirMap[res] << "\n\n";
 			ai->play(res);
-// 			fprintf(stderr, "move generated: %d, for me: %d\n", reverseMapDir(res, false), res);
 		} else if (command == "timeleft") {
 			ss >> t;
 			printNotSupported();
