@@ -22,6 +22,7 @@ DirId dirMap[] = {Board::RIGHT, Board::RIGHT_UP, Board::UP, Board::LEFT_UP, Boar
 		  Board::LEFT_DOWN, Board::DOWN, Board::RIGHT_DOWN};
 DirId reverseDirMap[8];
 
+
 int main() {
 	for (int i = 0; i < 8; ++i)
 		reverseDirMap[dirMap[i]] = i;
@@ -50,9 +51,13 @@ int main() {
 			DirId d;
 			ss >> d;
 			ai->play(dirMap[d]);
+// 			fprintf(stderr, "Direction: %d, for me: %d\n", d, mapDir(d, false));
 			printOK();
 		} else if (command == "genmove") {
-			cout << "= " << reverseDirMap[ai->genMove()] << "\n\n";
+			DirId res = ai->genMove();
+			cout << "= " << reverseDirMap[res] << "\n\n";
+			ai->play(res);
+// 			fprintf(stderr, "move generated: %d, for me: %d\n", reverseMapDir(res, false), res);
 		} else if (command == "timeleft") {
 			ss >> t;
 			printNotSupported();
