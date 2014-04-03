@@ -75,6 +75,10 @@ public:
 	 */
 	bool isGameFinished() const;
 	bool doesRedWin() const;
+	/**
+	 * @brief Returns true if the player can go from current position using dir.
+	 */
+	bool canGo(const DirId dirId) const;
 
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;
@@ -100,10 +104,6 @@ private:
 	 * @brief Connects field a and b with an edge (adequate to move).
 	 */
 	void connect(const engine::Field a, const engine::Field b);
-	/**
-	 * @brief Returns true if the player can go from current position using dir.
-	 */
-	bool canGo(const DirId dirId) const;
 	/**
 	 * @brief Returns true if x is a valid field (it's on the map).
 	 * @return bool

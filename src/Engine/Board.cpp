@@ -26,18 +26,21 @@ Board::Board(Coord width, Coord height)
 	Field f, lastField, midRow;
 	lastField = width * height - 1;
 	midRow = width / 2;
+	// top and bottom line
 	for (f = 0; f < width - 1; ++f) {
 		addGuardAt(f);
 		addGuardAt(lastField - width - f - 1);
 	}
 
+	// top-left, top-right, bottom-left, bottom-right
 	for (f = width; f < width + midRow - 1; ++f) {
 		addGuardAt(f);
 		addGuardAt(2 * width - 1 - f + width - 1);
-		addGuardAt(lastField - f - 1);
+		addGuardAt(lastField - width - f - 1);
 		addGuardAt(lastField - 2 * width + 1 + f - 2 * width);
 	}
 
+	// left and right
 	for (f = 2 * width; f < (height - 3) * width; f += width) {
 		addGuardAt(f);
 		addGuardAt(f + width - 2);
