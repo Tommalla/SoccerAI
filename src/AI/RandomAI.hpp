@@ -1,3 +1,6 @@
+#ifndef RANDOM_AI_HPP
+#define RANDOM_AI_HPP
+
 #include "AI.hpp"
 
 class RandomAI: public AI {
@@ -6,3 +9,5 @@ public:
 
 	virtual DirId genMove();
 };
+
+#endif // RANDOM_AI_HPP

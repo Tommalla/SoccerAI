@@ -1,13 +1,13 @@
 set(HEADERS
 	AI.hpp
 	RandomAI.hpp
-	AlphaBetaTree.hpp
+	AlphaBetaNode.hpp
 )
 
 set(SOURCES
 	AI.cpp
 	RandomAI.cpp
-	AlphaBetaTree.cpp
+	AlphaBetaNode.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})

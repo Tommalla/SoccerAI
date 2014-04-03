@@ -1,10 +1,9 @@
+#ifndef AI_HPP
+#define AI_HPP
 #include <stack>
 
 #include "../Engine/engine.hpp"
 #include "../Engine/Board.hpp"
-
-#ifndef AI_HPP
-#define AI_HPP
 
 class AI {
 public:

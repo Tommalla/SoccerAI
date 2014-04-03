@@ -1,9 +1,8 @@
+#ifndef BOARD_HPP
+#define BOARD_HPP
 #include <vector>
 
 #include "engine.hpp"
-
-#ifndef BOARD_HPP
-#define BOARD_HPP
 
 typedef int16_t DirId;
 
