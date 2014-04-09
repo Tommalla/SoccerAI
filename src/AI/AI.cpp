@@ -20,4 +20,7 @@ void AI::undo() {
 	board.undo(m.first, m.second);
 }
 
+void AI::setTimeLeft(const unsigned int time) {}	//NOOP
+
+
 

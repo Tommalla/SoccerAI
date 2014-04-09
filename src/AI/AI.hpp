@@ -22,6 +22,10 @@ public:
 	 * @brief Undoes the last move.
 	 */
 	virtual void undo();
+	/**
+	 * @brief Sets the amount of time left in some arbitrary (yet common for all AIs) unit.
+	 */
+	virtual void setTimeLeft(const unsigned int time);
 protected:
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;

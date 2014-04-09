@@ -7,6 +7,10 @@
 
 #include "AI/AI.hpp"
 #include "AI/RandomAI.hpp"
+#include "AI/AlphaBetaAI.hpp"
+#include "AI/objectiveFunctions.hpp"
+
+#define ALPHA_BETA_AI
 
 using namespace std;
 
@@ -41,7 +45,13 @@ int main() {
 		printOK();
 	}
 
-	unique_ptr<AI> ai = unique_ptr<AI>(new RandomAI(w, h));
+	unique_ptr<AI> ai;
+	#ifdef RANDOM_AI
+	ai = unique_ptr<AI>(new RandomAI(w, h));
+	#endif
+	#ifdef ALPHA_BETA_AI
+	ai = unique_ptr<AI>(new AlphaBetaAI(w, h, objectiveFunctions::simpleDistance));
+	#endif
 
 	while (getline(cin, line)) {
 		stringstream ss(line);
