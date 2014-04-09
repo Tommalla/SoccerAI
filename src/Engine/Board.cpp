@@ -142,6 +142,14 @@ bool Board::doesRedWin() const {
 	return gameFinished && playerRed;
 }
 
+Coord Board::getWidth() const {
+	return width - 2;
+}
+
+Coord Board::getHeight() const {
+	return height - 2;
+}
+
 DirId Board::getDirectionBetween(const Field a, const Field b) const {
 	assert(isValid(a));
 	assert(isValid(b));

@@ -79,6 +79,9 @@ public:
 	 */
 	bool canGo(const DirId dirId) const;
 
+	engine::Coord getWidth() const;
+	engine::Coord getHeight() const;
+
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;
 	const static DirId UP = 1;
