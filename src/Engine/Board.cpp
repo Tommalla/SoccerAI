@@ -88,8 +88,9 @@ void Board::undo(const Move move, const bool changePlayer) {
 	undo(getDirectionBetween(position, position + move), changePlayer);
 }
 
-void Board::undo(const DirId moveId, const bool changePlayer) {
+void Board::undo(DirId moveId, const bool changePlayer) {
 	assert(moveId >= 0);
+	moveId = directions.size() - moveId - 1;
 
 	Field dst = position + directions[moveId];
 	assert(isValid(dst));

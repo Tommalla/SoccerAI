@@ -49,7 +49,7 @@ public:
 	/**
 	 * @brief Undoes a move if it is possible that it was the last move done.
 	 */
-	void undo(const DirId moveId, const bool changePlayer = false);
+	void undo(DirId moveId, const bool changePlayer = false);
 	/**
 	 * @brief Returns the Field the ball is currently on.
 	 */
