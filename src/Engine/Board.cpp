@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <cstdio>
 
 #include "Board.hpp"
 
@@ -67,6 +68,7 @@ bool Board::play(const Move move) {
 }
 
 bool Board::play(const DirId moveId) {
+// 	fprintf(stderr, "play: %d\n", moveId);
 	Field dst = position + directions[moveId];
 	bool res = !edges[dst];
 
@@ -89,6 +91,7 @@ void Board::undo(const Move move, const bool changePlayer) {
 }
 
 void Board::undo(DirId moveId, const bool changePlayer) {
+// 	fprintf(stderr, "undo: %d [%d]\n", moveId, changePlayer);
 	assert(moveId >= 0);
 	moveId = directions.size() - moveId - 1;
 
@@ -97,10 +100,12 @@ void Board::undo(DirId moveId, const bool changePlayer) {
 	assert(isEdgeFrom(position, moveId));
 
 	edges[position] ^= 1 << moveId;
+	edges[dst] ^= 1 << (directions.size() - moveId - 1);
 
 	position = dst;
 	if (changePlayer)
 		playerRed = !playerRed;
+	gameFinished = false;
 }
 
 

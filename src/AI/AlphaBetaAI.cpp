@@ -24,10 +24,10 @@ DirId AlphaBetaAI::genMove() {
 	//TODO iterative deepening (change maxDepth)
 	for (auto m: moves) {
 		change = copy.play(m);
-		int tmp = gen(copy, 0, 0, 0);	//FIXME change values
+		int tmp = gen(copy, -99999999, 99999999, 0);	//FIXME change values
 		copy.undo(m, change);
 
-		if (bestVal == -1 || (change ? tmp < bestVal : tmp > bestVal)) {
+		if (bestVal == -1 || (!change ? tmp < bestVal : tmp > bestVal)) {
 			bestVal = tmp;
 			res = m;
 		}
@@ -40,17 +40,17 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	if (s.isGameFinished() || depth == maxDepth)
 		return value(s);
 
-	auto moves = s.getMoves();
+	const auto moves = s.getMoves();
 	bool minNode = isRed == s.isRedActive();
 	int r = 99999999 * (minNode ? -1 : 1);
 	bool change;
 
 	//can move this to template...
-	for (auto m: moves) {
+	for (const auto& m: moves) {
 		change = s.play(m);
 
 		int x = gen(s, (minNode ? alpha : max(r, alpha)), (minNode ? min(r, beta) : beta), depth + 1);
-		if ((minNode ? x <= alpha : x >= beta)) {
+		if (minNode ? x <= alpha : x >= beta) {
 			s.undo(m, change);
 			return x;
 		}

@@ -18,6 +18,13 @@ void testGoalPost(const DirId postDir, const DirId lastMove, bool redWins) {
 	assert(b.doesRedWin() == redWins);
 }
 
+void testGoalPostMoves(const DirId postDir, const size_t qty) {
+	Board b(8, 12);
+	for (int i = 0; i < 5; ++i)
+		b.play(postDir);
+	assert(b.getMoves().size() == qty);
+}
+
 void testTopBottomBorder(const DirId postDir, const DirId dirMove, const DirId impossibleMove) {
 	Board b(8, 12);
 	for (int i = 0; i < 5; ++i)
@@ -77,6 +84,11 @@ int main() {
 	puts("\nTest top-left border");
 	testTopBottomBorder(Board::UP, Board::LEFT, Board::LEFT);
 	testTopBottomBorder(Board::UP, Board::LEFT, Board::UP);
+
+	puts("\nTest top goalpost moves available");
+	testGoalPostMoves(Board::UP, 7);
+	puts("\nTest bottom goalpost moves available");
+	testGoalPostMoves(Board::DOWN, 7);
 
 	puts("OK");
 	return 0;
