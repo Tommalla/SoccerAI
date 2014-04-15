@@ -97,10 +97,12 @@ void Board::undo(DirId moveId, const bool changePlayer) {
 	assert(isEdgeFrom(position, moveId));
 
 	edges[position] ^= 1 << moveId;
+	edges[dst] ^= 1 << (directions.size() - moveId - 1);
 
 	position = dst;
 	if (changePlayer)
 		playerRed = !playerRed;
+	gameFinished = false;
 }
 
 
