@@ -46,7 +46,7 @@ DirId AlphaBetaAI::genMove() {
 
 int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	if (s.isGameFinished() || depth >= maxDepth) {
-		int tmp = value(s, !isRed);
+		int tmp = value(s, isRed != board.isRedActive());
 		fprintf(stderr, "Reached leaf: %d, igf: %d, drw: %d, d: %d\n", tmp, s.isGameFinished(), s.doesRedWin(), depth);
 		return tmp;
 	}
