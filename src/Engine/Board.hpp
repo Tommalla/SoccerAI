@@ -130,6 +130,7 @@ private:
 	engine::Field position;
 	const engine::Coord width, height;
 	bool playerRed;
+	bool redWins;
 	bool gameFinished;
 };
 

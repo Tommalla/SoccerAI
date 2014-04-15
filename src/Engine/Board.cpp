@@ -145,7 +145,7 @@ bool Board::isGameFinished() const {
 }
 
 bool Board::doesRedWin() const {
-	return gameFinished && playerRed;
+	return gameFinished && redWins;
 }
 
 Coord Board::getWidth() const {
@@ -229,13 +229,13 @@ bool Board::updateGameFinished() {
 		return true;
 
 	if (position >= width + width / 2 - 1 && position <= width + width / 2 + 1) {
-		playerRed = gameFinished = true;
+		redWins = gameFinished = true;
 	} else if (position >= (height - 1) * width - 2 - width / 2 && position <= (height - 1) * width + 1 - width / 2) {
-		playerRed = false;
+		redWins = false;
 		gameFinished = true;
 	} else if (getMoves().size() == 0) {
 		gameFinished = true;
-		playerRed = !playerRed;
+		redWins = !playerRed;
 	}
 
 	return gameFinished;
