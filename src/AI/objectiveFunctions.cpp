@@ -2,8 +2,9 @@
 
 #include "objectiveFunctions.hpp"
 
-int objectiveFunctions::simpleDistance(const Board& b) {
-// 	fprintf(stderr, "%d\n", b.isGameFinished());
-	return b.isGameFinished() && !b.doesRedWin() ? 0 : b.getPosition().second;
+int objectiveFunctions::simpleDistance(const Board& b, const bool forRed) {
+	if (b.isGameFinished())
+		return b.doesRedWin() == forRed ? 99999999 : -99999999;
+	return b.getPosition().second;
 }
 
