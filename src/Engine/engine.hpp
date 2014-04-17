@@ -1,5 +1,6 @@
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
 #include <cstdint>
-
 #include <utility>
 
 namespace engine {
@@ -7,4 +8,8 @@ namespace engine {
 	typedef int Field;
 	typedef Field Move;
 	typedef std::pair<Coord, Coord> Position;
+
+	const int INF = 99999999;
 };
+
+#endif
