@@ -7,12 +7,12 @@ using std::function;
 using std::min;
 using std::max;
 
-AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, const function<int(const Board&, const bool)>& value)
+AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, const function<int(const Board&)>& value)
 : AI(width, height)
 , value{value} {}
 
-
 DirId AlphaBetaAI::genMove() {
+	AI::genMove();
 	Board copy{board};
 	auto moves = board.getMoves();
 	int bestVal = -1;
@@ -20,42 +20,31 @@ DirId AlphaBetaAI::genMove() {
 	bool change;
 
 	assert(!moves.empty());
-	isRed = board.isRedActive();
-	fprintf(stderr, "isRed: %d\n", isRed);
+	assert(!board.isGameFinished());
 
 	//TODO iterative deepening (change maxDepth)
 	for (auto m: moves) {
 		change = copy.play(m);
-		int tmp = gen(copy, 999999999, -99999999, 0);	//FIXME change values
+		int tmp = gen(copy, -engine::INF, engine::INF, 0);	//FIXME change values
 		copy.undo(m, change);
 
-		if (bestVal == -1 || (change ? tmp > bestVal : tmp < bestVal)) {
-			fprintf(stderr, "New best result: %d, %d\n", tmp, m);
+		if (bestVal == -1 || tmp > bestVal) {
 			bestVal = tmp;
 			res = m;
 		}
 	}
-
-	change = board.play(res);
-	fprintf(stderr, "genmove: moves left: %d, isGameFinished: %d, doesRedWin: %d, result: %d, resMove: %d\n", board.getMoves().size(), board.isGameFinished(),
-		board.doesRedWin(), bestVal, res);
-	board.undo(res, change);
 
 	return res;
 }
 
 int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	if (s.isGameFinished() || depth >= maxDepth) {
-		int tmp = value(s, isRed != board.isRedActive());
-		fprintf(stderr, "Reached leaf: %d, igf: %d, drw: %d, d: %d\n", tmp, s.isGameFinished(), s.doesRedWin(), depth);
-		return tmp;
+		return value(s);
 	}
 
-// 	fprintf(stderr, "Move...\n");
-
 	auto moves = s.getMoves();
-	bool minNode = isRed != s.isRedActive();
-	int r = 99999999 * (minNode ? -1 : 1);
+	bool minNode = !s.isRedActive();
+	int r = engine::INF * (minNode ? 1 : -1);
 	bool change;
 
 	//can move this to template...

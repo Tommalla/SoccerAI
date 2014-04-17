@@ -17,7 +17,7 @@ public:
 	 * @brief Generates the next move.
 	 * This method **has** to be implemented.
 	 */
-	virtual DirId genMove() = 0;
+	virtual DirId genMove();
 	/**
 	 * @brief Undoes the last move.
 	 */
@@ -26,9 +26,13 @@ public:
 	 * @brief Sets the amount of time left in some arbitrary (yet common for all AIs) unit.
 	 */
 	virtual void setTimeLeft(const unsigned int time);
+
 protected:
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
+
+private:
+	bool alreadyMoved;
 };
 
 #endif // AI_HPP

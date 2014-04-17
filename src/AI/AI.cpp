@@ -7,10 +7,19 @@ using namespace engine;
 using std::make_pair;
 
 AI::AI(const engine::Coord width, const engine::Coord height)
-: board{width, height} {}
+: board{width, height}
+, alreadyMoved(false) {}
 
 void AI::play(const DirId& move) {
+	if (!alreadyMoved) {
+		board.changeActivePlayer();
+		alreadyMoved = true;
+	}
 	history.push(make_pair(move, board.play(move)));
+}
+
+DirId AI::genMove() {
+	alreadyMoved = true;
 }
 
 void AI::undo() {
@@ -22,6 +31,3 @@ void AI::undo() {
 }
 
 void AI::setTimeLeft(const unsigned int time) {}	//NOOP
-
-
-

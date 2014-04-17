@@ -11,6 +11,7 @@ RandomAI::RandomAI(const engine::Coord width, const engine::Coord height)
 }
 
 DirId RandomAI::genMove() {
+	AI::genMove();
 	auto possible = board.getMoves();
 	return possible[rand() % possible.size()];
 }
