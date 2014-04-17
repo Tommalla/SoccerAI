@@ -22,7 +22,6 @@ Board::Board(Coord width, Coord height)
 	position = (height / 2) * width + width / 2;
 	playerRed = true; //red starts
 
-	//FIXME optimize (or not? works and is issued not-very-often)
 	//add borders
 	Field f, lastField, midRow;
 	lastField = width * height - 1;
@@ -54,7 +53,9 @@ Board::Board(const Board& other)
 , position{other.position}
 , width{other.width}
 , height{other.height}
-, playerRed{other.playerRed} {
+, playerRed{other.playerRed}
+, redWins{other.redWins}
+, gameFinished{other.gameFinished} {
 	for (int i = 0; i < width * height; ++i)
 		edges[i] = other.edges[i];
 }
@@ -68,7 +69,6 @@ bool Board::play(const Move move) {
 }
 
 bool Board::play(const DirId moveId) {
-// 	fprintf(stderr, "play: %d\n", moveId);
 	Field dst = position + directions[moveId];
 	bool res = !edges[dst];
 
@@ -77,11 +77,10 @@ bool Board::play(const DirId moveId) {
 
 	connect(position, moveId);
 	position = dst;
+	updateGameFinished();
 
 	if (res)
-		playerRed = !playerRed;
-
-	res |= updateGameFinished();
+		changeActivePlayer();
 
 	return res;
 }
@@ -91,7 +90,6 @@ void Board::undo(const Move move, const bool changePlayer) {
 }
 
 void Board::undo(DirId moveId, const bool changePlayer) {
-// 	fprintf(stderr, "undo: %d [%d]\n", moveId, changePlayer);
 	assert(moveId >= 0);
 	moveId = directions.size() - moveId - 1;
 
@@ -104,7 +102,8 @@ void Board::undo(DirId moveId, const bool changePlayer) {
 
 	position = dst;
 	if (changePlayer)
-		playerRed = !playerRed;
+		changeActivePlayer();
+
 	gameFinished = false;
 }
 
@@ -154,6 +153,10 @@ Coord Board::getWidth() const {
 
 Coord Board::getHeight() const {
 	return height - 2;
+}
+
+void Board::changeActivePlayer() {
+	playerRed = !playerRed;
 }
 
 DirId Board::getDirectionBetween(const Field a, const Field b) const {
@@ -228,9 +231,9 @@ bool Board::updateGameFinished() {
 	if (gameFinished)
 		return true;
 
-	if (position >= width + width / 2 - 1 && position <= width + width / 2 + 1) {
+	if (position >= width + width / 2 - 1 && position <= width + width / 2 + 1)
 		redWins = gameFinished = true;
-	} else if (position >= (height - 1) * width - 2 - width / 2 && position <= (height - 1) * width + 1 - width / 2) {
+	else if (position >= (height - 1) * width - 2 - width / 2 && position <= (height - 1) * width - width / 2) {
 		redWins = false;
 		gameFinished = true;
 	} else if (getMoves().size() == 0) {

@@ -82,6 +82,11 @@ public:
 	engine::Coord getWidth() const;
 	engine::Coord getHeight() const;
 
+	/**
+	 * @brief Changes the active player.
+	 */
+	void changeActivePlayer();
+
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;
 	const static DirId UP = 1;
