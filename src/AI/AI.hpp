@@ -8,6 +8,7 @@
 class AI {
 public:
 	AI(const engine::Coord width, const engine::Coord height);
+	virtual ~AI() {}
 
 	/**
 	 * @brief Acknowledges the playout of the move.

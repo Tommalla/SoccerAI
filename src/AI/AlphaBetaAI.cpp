@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "../Engine/Board.hpp"
 #include "AlphaBetaAI.hpp"
 
 using std::function;
@@ -25,7 +24,7 @@ DirId AlphaBetaAI::genMove() {
 	//TODO iterative deepening (change maxDepth)
 	for (auto m: moves) {
 		change = copy.play(m);
-		int tmp = gen(copy, -engine::INF, engine::INF, 0);	//FIXME change values
+		int tmp = gen(copy, -engine::INF, engine::INF, 0);
 		copy.undo(m, change);
 
 		if (bestVal == -1 || tmp > bestVal) {
