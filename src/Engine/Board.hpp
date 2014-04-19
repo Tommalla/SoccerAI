@@ -25,15 +25,6 @@ public:
 
 	~Board();
 	/**
-	 * @deprecated
-	 * @brief Plays the move. If the move's invalid, it will be found
-	 * by an assertion (if it's enabled).
-	 *
-	 * @return True if performing this move finishes the current player's turn.
-	 * False otherwise.
-	 */
-	bool play(const engine::Move move);
-	/**
 	 * @brief Plays the move. If the move's invalid, it will be found
 	 * by an assertion (if it's enabled).
 	 *
@@ -41,11 +32,6 @@ public:
 	 * False otherwise.
 	 */
 	bool play(const DirId moveId);
-	/**
-	 * @deprecated
-	 * @brief Undoes a move if it is possible that it was the last move done.
-	 */
-	void undo(const engine::Move move, const bool changePlayer = false);
 	/**
 	 * @brief Undoes a move if it is possible that it was the last move done.
 	 */
@@ -106,11 +92,6 @@ private:
 	 * @brief Connects field a with some other using the edge dirId.
 	 */
 	void connect(const engine::Field a, const DirId dirId);
-	/**
-	 * @deprecated
-	 * @brief Connects field a and b with an edge (adequate to move).
-	 */
-	void connect(const engine::Field a, const engine::Field b);
 	/**
 	 * @brief Returns true if x is a valid field (it's on the map).
 	 * @return bool

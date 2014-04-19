@@ -64,10 +64,6 @@ Board::~Board() {
 	delete[] edges;
 }
 
-bool Board::play(const Move move) {
-	return play(getDirectionBetween(position, position + move));
-}
-
 bool Board::play(const DirId moveId) {
 	Field dst = position + directions[moveId];
 	bool res = !edges[dst];
@@ -83,10 +79,6 @@ bool Board::play(const DirId moveId) {
 		changeActivePlayer();
 
 	return res;
-}
-
-void Board::undo(const Move move, const bool changePlayer) {
-	undo(getDirectionBetween(position, position + move), changePlayer);
 }
 
 void Board::undo(DirId moveId, const bool changePlayer) {
@@ -167,11 +159,6 @@ DirId Board::getDirectionBetween(const Field a, const Field b) const {
 		if (directions[i] == tmp)
 			return i;
 	return -1;
-}
-
-void Board::connect(const Field a, const Field b) {
-	assert(!isEdgeBetween(a, b));
-	connect(a, getDirectionBetween(a, b));
 }
 
 void Board::connect(const Field a, const DirId dirId) {
