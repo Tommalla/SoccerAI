@@ -68,7 +68,8 @@ int main() {
 			ai->play(res);
 		} else if (command == "timeleft") {
 			ss >> t;
-			printNotSupported();
+			ai->setTimeLeft(t);
+			printOK();
 		} else if (command == "undo") {
 			printNotSupported();
 		} else if (command.empty() == false) {

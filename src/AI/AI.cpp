@@ -30,4 +30,10 @@ void AI::undo() {
 	board.undo(m.first, m.second);
 }
 
-void AI::setTimeLeft(const unsigned int time) {}	//NOOP
+void AI::setTimeLeft(const int time) {
+	lastTimeLeft = timeLeft;
+	timeLeft = time;
+	lastMoveTime = lastTimeLeft - timeLeft;
+	if (lastMoveTime < 0)
+		lastMoveTime = 0;
+}

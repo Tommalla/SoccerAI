@@ -26,11 +26,12 @@ public:
 	/**
 	 * @brief Sets the amount of time left in some arbitrary (yet common for all AIs) unit.
 	 */
-	virtual void setTimeLeft(const unsigned int time);
+	virtual void setTimeLeft(const int time);
 
 protected:
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
+	int timeLeft, lastTimeLeft, lastMoveTime;
 
 private:
 	bool alreadyMoved;
