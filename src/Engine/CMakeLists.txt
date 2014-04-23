@@ -4,6 +4,7 @@ set(HEADERS
 )
 
 set(SOURCES
+	engine.cpp
 	Board.cpp
 )
 
