@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 
 #include "AlphaBetaAI.hpp"
 
@@ -8,35 +9,57 @@ using std::max;
 
 AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, const function<int(const Board&)>& value)
 : AI(width, height)
-, value{value} {}
+, value{value}
+, maxDepth{0}
+, fieldsUsed{0}
+, fields{(width + 1) * (height + 1)} {}
 
 DirId AlphaBetaAI::genMove() {
 	AI::genMove();
 	Board copy{board};
 	auto moves = board.getMoves();
 	int bestVal = -1;
-	DirId res;
+	DirId res = 0;
 	bool change;
 
 	assert(!moves.empty());
 	assert(!board.isGameFinished());
 
-	//TODO iterative deepening (change maxDepth)
-	for (auto m: moves) {
-		change = copy.play(m);
-		int tmp = gen(copy, -engine::INF, engine::INF, 0);
-		copy.undo(m, change);
+	timeAvailable = timeLeft * fieldsUsed / fields / 10;
+	fprintf(stderr, "%d / %d\n", fieldsUsed, fields);
+	beginTime = engine::getTime();
+// 	fprintf(stderr, "Begin time: %lld\n", beginTime);
+	operationsCounter = 0;
+	stopCalculations = false;
 
-		if (bestVal == -1 || tmp > bestVal) {
-			bestVal = tmp;
-			res = m;
+	for (maxDepth = 1; !stopCalculations && bestVal < engine::INF; ++maxDepth) {
+		fprintf(stderr, "Running maxDepth: %d, timeAvail: %lld\n", maxDepth, timeAvailable);
+
+		for (auto m: moves) {
+			change = copy.play(m);
+			int tmp = gen(copy, -engine::INF, engine::INF, 0);
+			copy.undo(m, change);
+
+			if (bestVal == -1 || tmp >= bestVal) {
+				bestVal = tmp;
+				res = m;
+			}
 		}
 	}
-
 	return res;
 }
 
 int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
+	//time control
+	if (++operationsCounter >= timeControlOps) {
+		operationsCounter = 0;
+		long long int t = engine::getTime();
+		if (t - beginTime >= timeAvailable) {
+			stopCalculations = true;
+			return value(s);
+		}
+	}
+
 	if (s.isGameFinished() || depth >= maxDepth) {
 		return value(s);
 	}
@@ -58,10 +81,17 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 		r = minNode ? min(r, x) : max(r, x);
 
 		s.undo(m, change);
+
+		if (stopCalculations)
+			return value(s);
 	}
 
 	return r;
 }
 
+void AlphaBetaAI::play(const DirId& move) {
+	AI::play(move);
+	++fieldsUsed;
+}
 
 
