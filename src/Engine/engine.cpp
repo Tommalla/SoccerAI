@@ -1,7 +1,7 @@
 #include <chrono>
 #include "engine.hpp"
 
-long long int engine::getTime() {
+engine::Time engine::getTime() {
 	// Magic...
 	auto now = std::chrono::system_clock::now();
 	auto duration = now.time_since_epoch();

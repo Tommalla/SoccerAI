@@ -4,15 +4,16 @@
 #include <utility>
 
 namespace engine {
-	/**
-	 * @brief Returns current system time in milliseconds
-	 */
-	long long int getTime();
-
 	typedef int8_t Coord;
 	typedef int Field;
 	typedef Field Move;
 	typedef std::pair<Coord, Coord> Position;
+	typedef long long int Time;
+
+	/**
+	 * @brief Returns current system time in milliseconds
+	 */
+	Time getTime();
 
 	const int INF = 99999999;
 };
