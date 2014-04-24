@@ -3,6 +3,12 @@
 #include <cstdint>
 #include <utility>
 
+#ifdef NDEBUG
+const bool debug = false;
+#else
+const bool debug = true;
+#endif
+
 namespace engine {
 	typedef int8_t Coord;
 	typedef int Field;
@@ -14,6 +20,7 @@ namespace engine {
 	 * @brief Returns current system time in milliseconds
 	 */
 	Time getTime();
+	void printDebug(const char *format, ...);
 
 	const int INF = 99999999;
 };
