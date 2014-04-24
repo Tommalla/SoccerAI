@@ -6,6 +6,7 @@
 using std::function;
 using std::min;
 using std::max;
+using namespace engine;
 
 AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, const function<int(const Board&)>& value)
 : AI(width, height)
@@ -26,15 +27,15 @@ DirId AlphaBetaAI::genMove() {
 	assert(!board.isGameFinished());
 
 	timeAvailable = timeLeft * fieldsUsed / fields / 10;
-	fprintf(stderr, "%d / %d, time available: %lld\n", fieldsUsed, fields, timeAvailable);
-	beginTime = engine::getTime();
+	printDebug("%d / %d, time available: %lld\n", fieldsUsed, fields, timeAvailable);
+	beginTime = getTime();
 	operationsCounter = 0;
 	stopCalculations = false;
 
-	for (maxDepth = 1; !stopCalculations && bestVal < engine::INF; ++maxDepth) {
+	for (maxDepth = 1; !stopCalculations && bestVal < INF; ++maxDepth) {
 		for (auto m: moves) {
 			change = copy.play(m);
-			int tmp = gen(copy, -engine::INF, engine::INF, 0);
+			int tmp = gen(copy, -INF, INF, 0);
 			copy.undo(m, change);
 
 			if (bestVal == -1 || tmp >= bestVal) {
@@ -44,7 +45,7 @@ DirId AlphaBetaAI::genMove() {
 		}
 	}
 
-	fprintf(stderr, "maxDepth = %d\n", maxDepth);
+	printDebug("maxDepth = %d\n", maxDepth);
 	return res;
 }
 
@@ -52,7 +53,7 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	//time control
 	if (++operationsCounter >= timeControlOps) {
 		operationsCounter = 0;
-		engine::Time t = engine::getTime();
+		Time t = getTime();
 		if (t - beginTime >= timeAvailable) {
 			stopCalculations = true;
 			return value(s);
@@ -65,7 +66,7 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 
 	auto moves = s.getMoves();
 	bool minNode = !s.isRedActive();
-	int r = engine::INF * (minNode ? 1 : -1);
+	int r = INF * (minNode ? 1 : -1);
 	bool change;
 
 	//can move this to template...
@@ -92,5 +93,3 @@ void AlphaBetaAI::play(const DirId& move) {
 	AI::play(move);
 	++fieldsUsed;
 }
-
-
