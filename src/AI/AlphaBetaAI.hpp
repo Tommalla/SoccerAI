@@ -15,7 +15,7 @@ private:
 	std::function<int(const Board&)> value;
 	//time control
 	unsigned int maxDepth;
-	long long int timeAvailable, beginTime;
+	engine::Time timeAvailable, beginTime;
 	int operationsCounter;
 	bool stopCalculations;
 	const int timeControlOps = 500;

@@ -26,15 +26,12 @@ DirId AlphaBetaAI::genMove() {
 	assert(!board.isGameFinished());
 
 	timeAvailable = timeLeft * fieldsUsed / fields / 10;
-	fprintf(stderr, "%d / %d\n", fieldsUsed, fields);
+	fprintf(stderr, "%d / %d, time available: %lld\n", fieldsUsed, fields, timeAvailable);
 	beginTime = engine::getTime();
-// 	fprintf(stderr, "Begin time: %lld\n", beginTime);
 	operationsCounter = 0;
 	stopCalculations = false;
 
 	for (maxDepth = 1; !stopCalculations && bestVal < engine::INF; ++maxDepth) {
-		fprintf(stderr, "Running maxDepth: %d, timeAvail: %lld\n", maxDepth, timeAvailable);
-
 		for (auto m: moves) {
 			change = copy.play(m);
 			int tmp = gen(copy, -engine::INF, engine::INF, 0);
@@ -46,6 +43,8 @@ DirId AlphaBetaAI::genMove() {
 			}
 		}
 	}
+
+	fprintf(stderr, "maxDepth = %d\n", maxDepth);
 	return res;
 }
 
@@ -53,7 +52,7 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	//time control
 	if (++operationsCounter >= timeControlOps) {
 		operationsCounter = 0;
-		long long int t = engine::getTime();
+		engine::Time t = engine::getTime();
 		if (t - beginTime >= timeAvailable) {
 			stopCalculations = true;
 			return value(s);
