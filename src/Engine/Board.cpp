@@ -11,16 +11,27 @@ Board::Board(Coord width, Coord height)
 : directions{-width - 4, -width - 3, -width - 2,
 		-1, +1,
 		width + 2, width + 3, width + 4}
+, currentHash{0}
 , width{(Coord)(width + 3)}
 , height{(Coord)(height + 3)}
 , gameFinished{false} {
+	//set width/height
 	width += 3;
 	height += 3;
+
+	//prepare hash (initialize Zobrist)
+	hash = new Hash[width * height * directions.size()];
+	for (size_t i = 0; i < width * height * directions.size(); ++i)
+		hash[i] = engine::random();
+	playerRedHash = engine::random();
+
+	//prepare board
 	edges = new uint8_t[width * height];
 	for (int i = 0; i < width * height; ++i)
 		edges[i] = 0;
 	position = (height / 2) * width + width / 2;
 	playerRed = true; //red starts
+	currentHash = playerRedHash;
 
 	//add borders
 	Field f, lastField, midRow;
@@ -50,6 +61,9 @@ Board::Board(Coord width, Coord height)
 Board::Board(const Board& other)
 : directions{other.directions}
 , edges{new uint8_t[other.width * other.height]}
+, hash{new uint_fast64_t[other.width * other.height * other.directions.size()]}
+, playerRedHash{other.playerRedHash}
+, currentHash{other.currentHash}
 , position{other.position}
 , width{other.width}
 , height{other.height}
@@ -58,10 +72,13 @@ Board::Board(const Board& other)
 , gameFinished{other.gameFinished} {
 	for (int i = 0; i < width * height; ++i)
 		edges[i] = other.edges[i];
+	for (size_t i = 0; i < width * height * other.directions.size(); ++i)
+		hash[i] = other.hash[i];
 }
 
 Board::~Board() {
 	delete[] edges;
+	delete[] hash;
 }
 
 bool Board::play(const DirId moveId) {
@@ -91,6 +108,9 @@ void Board::undo(DirId moveId, const bool changePlayer) {
 
 	edges[position] ^= 1 << moveId;
 	edges[dst] ^= 1 << (directions.size() - moveId - 1);
+
+	currentHash ^= hash[position * moveId];
+	currentHash ^= hash[dst * (directions.size() - moveId - 1)];
 
 	position = dst;
 	if (changePlayer)
@@ -149,6 +169,11 @@ Coord Board::getHeight() const {
 
 void Board::changeActivePlayer() {
 	playerRed = !playerRed;
+	currentHash ^= playerRedHash;
+}
+
+Hash Board::getHash() const {
+	return currentHash;
 }
 
 DirId Board::getDirectionBetween(const Field a, const Field b) const {
@@ -171,6 +196,9 @@ void Board::connect(const Field a, const DirId dirId) {
 
 	edges[a] |= 1 << dirId;
 	edges[dst] |= 1 << (directions.size() - 1 - dirId);
+
+	currentHash ^= hash[a * dirId];
+	currentHash ^= hash[dst * (directions.size() - dirId - 1)];
 }
 
 bool Board::canGo(const DirId dirId) const {

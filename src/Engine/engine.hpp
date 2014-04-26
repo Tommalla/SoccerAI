@@ -15,6 +15,7 @@ namespace engine {
 	typedef Field Move;
 	typedef std::pair<Coord, Coord> Position;
 	typedef long long int Time;
+	typedef uint_fast64_t Hash;
 
 	/**
 	 * @brief Returns current system time in milliseconds

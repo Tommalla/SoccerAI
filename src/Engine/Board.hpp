@@ -73,6 +73,11 @@ public:
 	 */
 	void changeActivePlayer();
 
+	/**
+	 * @brief Returns the current hash of Board.
+	 */
+	engine::Hash getHash() const;
+
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;
 	const static DirId UP = 1;
@@ -113,6 +118,9 @@ private:
 	bool updateGameFinished();
 
 	uint8_t* edges;
+	engine::Hash* hash;
+	engine::Hash playerRedHash;
+	engine::Hash currentHash;
 	engine::Field position;
 	const engine::Coord width, height;
 	bool playerRed;
