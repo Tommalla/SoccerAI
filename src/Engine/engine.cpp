@@ -1,6 +1,7 @@
 #include <chrono>
 #include <cstdarg>
 #include <cstdio>
+#include <random>
 #include "engine.hpp"
 
 engine::Time engine::getTime() {
@@ -19,4 +20,10 @@ void engine::printDebug(const char* format, ...) {
 		va_end (args);
 	}
 }
+
+uint_fast64_t engine::random() {
+	static std::mt19937_64 mt{std::random_device{}()};
+	return mt();
+}
+
 

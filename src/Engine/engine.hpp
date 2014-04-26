@@ -21,6 +21,11 @@ namespace engine {
 	 */
 	Time getTime();
 	void printDebug(const char *format, ...);
+	/**
+	 * @brief Returns a random number from the range of [0;2^64 - 1]
+	 * @return uint_fast64_t
+	 */
+	uint_fast64_t random();
 
 	const int INF = 99999999;
 };
