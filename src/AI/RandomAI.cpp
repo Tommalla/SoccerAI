@@ -1,17 +1,16 @@
-#include <cstdlib>
-#include <ctime>
-
+#include <cassert>
+#include <random>
 #include "RandomAI.hpp"
 
-using std::time;
+RandomAI::RandomAI(const engine::Coord& width, const engine::Coord& height)
+: AI(width, height) {}
 
-RandomAI::RandomAI(const engine::Coord width, const engine::Coord height)
-: AI(width, height) {
-	srand(time(nullptr));
-}
 
 DirId RandomAI::genMove() {
+	static std::mt19937 mt{std::random_device{}()};
 	AI::genMove();
 	auto possible = board.getMoves();
-	return possible[rand() % possible.size()];
+	assert(!possible.empty());
+	std::uniform_int_distribution<int> dist{0, (int)possible.size() - 1};
+	return possible[dist(mt)];
 }
