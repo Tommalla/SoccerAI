@@ -6,7 +6,7 @@ RandomAI::RandomAI(const engine::Coord& width, const engine::Coord& height)
 : AI(width, height) {}
 
 
-DirId RandomAI::genMove() {
+DirId RandomAI::generateMove() {
 	static std::mt19937 mt{std::random_device{}()};
 	AI::genMove();
 	auto possible = board.getMoves();

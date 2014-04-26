@@ -20,6 +20,7 @@ void AI::play(const DirId& move) {
 
 DirId AI::genMove() {
 	alreadyMoved = true;
+	return generateMove();
 }
 
 void AI::undo() {

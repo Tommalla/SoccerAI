@@ -18,7 +18,7 @@ public:
 	 * @brief Generates the next move.
 	 * This method **has** to be implemented.
 	 */
-	virtual DirId genMove();
+	DirId genMove();
 	/**
 	 * @brief Undoes the last move.
 	 */
@@ -29,6 +29,8 @@ public:
 	virtual void setTimeLeft(const int time);
 
 protected:
+	virtual DirId generateMove() = 0;
+
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
 	int timeLeft, lastTimeLeft, lastMoveTime;

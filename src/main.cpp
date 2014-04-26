@@ -10,6 +10,7 @@
 #include "AI/AlphaBetaAI.hpp"
 #include "AI/objectiveFunctions.hpp"
 
+// #define RANDOM_AI
 #define ALPHA_BETA_AI
 
 using namespace std;

@@ -15,7 +15,7 @@ AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, 
 , fieldsUsed{0}
 , fields{(width + 1) * (height + 1)} {}
 
-DirId AlphaBetaAI::genMove() {
+DirId AlphaBetaAI::generateMove() {
 	AI::genMove();
 	Board copy{board};
 	auto moves = board.getMoves();
