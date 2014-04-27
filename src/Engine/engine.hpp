@@ -28,6 +28,16 @@ namespace engine {
 	 */
 	uint_fast64_t random();
 
+	/**
+	 * @brief Returns the number of set bits in an integer type.
+	 */
+	template<class Type>
+	uint8_t numberOfSetBits(Type i) {
+		i = i - ((i >> 1) & 0x55555555);
+		i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+		return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+	}
+
 	const int INF = 99999999;
 };
 

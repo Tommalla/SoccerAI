@@ -25,5 +25,3 @@ uint_fast64_t engine::random() {
 	static std::mt19937_64 mt{std::random_device{}()};
 	return mt();
 }
-
-
