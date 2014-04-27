@@ -22,8 +22,8 @@ Board::Board(Coord width, Coord height)
 	//prepare hash (initialize Zobrist)
 	hash = new Hash[width * height * directions.size()];
 	for (size_t i = 0; i < width * height * directions.size(); ++i)
-		hash[i] = engine::random();
-	playerRedHash = engine::random();
+		hash[i] = engine::deterministicRandom();
+	playerRedHash = engine::deterministicRandom();
 
 	//prepare board
 	edges = new uint8_t[width * height];

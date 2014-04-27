@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cassert>
 #include <functional>
 #include <random>
 #include "../engine.hpp"
@@ -15,10 +16,23 @@ engine::Time generateRandom(std::function<int(void)> f) {
 }
 
 int main() {
+	printf("Random\n");
 	for (int i = 0; i < 5; ++i)
 		printf("%lu\n", engine::random());
 
-	printf("Generating %d random numbers from 0 to %d\n", num, upperBound);
+	printf("\nDeterministic random\n");
+	uint_fast64_t t[] = {
+		14514284786278117030ull,
+		4620546740167642908ull,
+		13109570281517897720ull,
+		17462938647148434322ull,
+		355488278567739596ull
+	};
+
+	for (int i = 0; i < 5; ++i)
+		assert(engine::deterministicRandom() == t[i]);
+
+	printf("\nGenerating %d random numbers from 0 to %d\n", num, upperBound);
 
 	std::uniform_int_distribution<int> dist{0, upperBound};
 	std::mt19937 mt;

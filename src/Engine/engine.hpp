@@ -27,6 +27,10 @@ namespace engine {
 	 * @return uint_fast64_t
 	 */
 	uint_fast64_t random();
+	/**
+	 * @brief The same as engine::random(), only with a predefined, constant seed.
+	 */
+	uint_fast64_t deterministicRandom();
 
 	/**
 	 * @brief Returns the number of set bits in an integer type.
