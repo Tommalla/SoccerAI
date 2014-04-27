@@ -7,6 +7,7 @@ set(HEADERS
 	Judge.hpp
 	Status.hpp
 	MemoryManager.hpp
+	MCTSAI.hpp
 )
 
 set(SOURCES
@@ -17,6 +18,7 @@ set(SOURCES
 	AIFactory.cpp
 	Judge.cpp
 	Status.cpp
+	MCTSAI.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})
