@@ -5,6 +5,7 @@ set(HEADERS
 	objectiveFunctions.hpp
 	AIFactory.hpp
 	Judge.hpp
+	Status.hpp
 )
 
 set(SOURCES
@@ -14,6 +15,7 @@ set(SOURCES
 	objectiveFunctions.cpp
 	AIFactory.cpp
 	Judge.cpp
+	Status.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})
