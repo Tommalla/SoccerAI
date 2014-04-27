@@ -14,6 +14,7 @@ namespace AIFactory {
 	enum class AIType {
 		RANDOM,
 		ALPHA_BETA,
+		MCTS_SEQUENTIAL_TREE,
 		WRONG
 	};
 

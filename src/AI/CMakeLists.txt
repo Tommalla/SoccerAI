@@ -8,6 +8,7 @@ set(HEADERS
 	Status.hpp
 	MemoryManager.hpp
 	MCTSAI.hpp
+	SequentialTreeMCTSAI.hpp
 )
 
 set(SOURCES
@@ -19,6 +20,7 @@ set(SOURCES
 	Judge.cpp
 	Status.cpp
 	MCTSAI.cpp
+	SequentialTreeMCTSAI.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})

@@ -9,9 +9,11 @@
 #include "AI/RandomAI.hpp"
 #include "AI/AlphaBetaAI.hpp"
 #include "AI/objectiveFunctions.hpp"
+#include "AI/AIFactory.hpp"
 
 // #define RANDOM_AI
-#define ALPHA_BETA_AI
+// #define ALPHA_BETA_AI
+#define SEQUENTIAL_TREE_MCTS
 
 using namespace std;
 
@@ -46,12 +48,15 @@ int main() {
 		printOK();
 	}
 
-	unique_ptr<AI> ai;
+	shared_ptr<AI> ai;
 	#ifdef RANDOM_AI
-	ai = unique_ptr<AI>(new RandomAI(w, h));
+	ai = AIFactory::create(AIFactory::AIType::RANDOM, w, h);
 	#endif
 	#ifdef ALPHA_BETA_AI
-	ai = unique_ptr<AI>(new AlphaBetaAI(w, h, objectiveFunctions::simpleDistance));
+	ai = AIFactory::create(AIFactory::AIType::ALPHA_BETA, w, h);
+	#endif
+	#ifdef SEQUENTIAL_TREE_MCTS
+	ai = AIFactory::create(AIFactory::AIType::MCTS_SEQUENTIAL_TREE, w, h);
 	#endif
 
 	while (getline(cin, line)) {

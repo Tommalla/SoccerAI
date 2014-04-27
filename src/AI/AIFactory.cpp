@@ -2,6 +2,7 @@
 
 #include "AIFactory.hpp"
 #include "AlphaBetaAI.hpp"
+#include "SequentialTreeMCTSAI.hpp"
 #include "RandomAI.hpp"
 #include "objectiveFunctions.hpp"
 
@@ -18,6 +19,9 @@ shared_ptr<AI> AIFactory::create(const AIType& type, const Coord width, const Co
 		case AIType::ALPHA_BETA:
 			res = shared_ptr<AI>(new AlphaBetaAI(width, height, objectiveFunctions::simpleDistance));
 			break;
+		case AIType::MCTS_SEQUENTIAL_TREE:
+			res = shared_ptr<AI>(new SequentialTreeMCTSAI(width, height, 30, 100000));
+			break;
 		default:
 			throw WrongAITypeException();
 	}
@@ -33,6 +37,9 @@ AIFactory::AIType AIFactory::stringToType(std::string str) {
 
 	if (str[0] == 'a')
 		return AIType::ALPHA_BETA;
+
+	if (str[0] == 'm')
+		return AIType::MCTS_SEQUENTIAL_TREE;
 
 	return AIType::WRONG;
 }
