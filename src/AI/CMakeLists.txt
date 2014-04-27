@@ -6,6 +6,7 @@ set(HEADERS
 	AIFactory.hpp
 	Judge.hpp
 	Status.hpp
+	MemoryManager.hpp
 )
 
 set(SOURCES
