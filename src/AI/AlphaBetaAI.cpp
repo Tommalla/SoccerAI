@@ -18,8 +18,8 @@ AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, 
 DirId AlphaBetaAI::generateMove() {
 	Board copy{board};
 	auto moves = board.getMoves();
-	int bestVal = -1;
-	DirId res = 0;
+	int bestVal, newBestVal;
+	DirId res = 0, newRes = 0;
 	bool change;
 
 	assert(!moves.empty());
@@ -31,20 +31,25 @@ DirId AlphaBetaAI::generateMove() {
 	operationsCounter = 0;
 	stopCalculations = false;
 
-	for (maxDepth = 1; !stopCalculations && bestVal < INF; ++maxDepth) {
+	for (maxDepth = 1, bestVal = newBestVal = -1; !stopCalculations && bestVal < INF; ++maxDepth, newBestVal = -1) {
 		for (auto m: moves) {
 			change = copy.play(m);
 			int tmp = gen(copy, -INF, INF, 0);
 			copy.undo(m, change);
 
-			if (bestVal == -1 || tmp >= bestVal) {
-				bestVal = tmp;
-				res = m;
+			if (newBestVal == -1 || tmp >= newBestVal) {
+				newBestVal = tmp;
+				newRes = m;
 			}
+		}
+		
+		if (!stopCalculations || (newBestVal != -1 && bestVal < newBestVal)) {
+			bestVal = newBestVal;
+			res = newRes;
 		}
 	}
 
-	printDebug("maxDepth = %d\n", maxDepth);
+	printDebug("maxDepth = %d, bestVal = %d\n", maxDepth, bestVal);
 	return res;
 }
 
