@@ -14,11 +14,10 @@ public:
 	MemoryManager&& operator=(MemoryManager&& other) = delete;
 	~MemoryManager();
 
-	Status* create(const engine::Hash& hash);
 	bool addChildren(Status* node, const size_t& num);
+	Status* allocate();
 	void reset();
 private:
-	Status* allocate();
 	size_t end;
 	const size_t size;
 	Status* memory;
@@ -33,13 +32,6 @@ MemoryManager<Status>::MemoryManager(const size_t& size)
 template<class Status>
 MemoryManager<Status>::~MemoryManager() {
 	delete[] memory;
-}
-
-template<class Status>
-Status* MemoryManager<Status>::create(const engine::Hash& hash) {
-	Status* res = allocate();
-	res->setHash(hash);
-	return res;
 }
 
 template<class Status>

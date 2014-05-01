@@ -16,7 +16,7 @@ protected:
 	virtual DirId generateMove() = 0;
 
 	//getting statuses (nodes)
-	virtual MCTSStatus* getOrCreateStatus(const engine::Hash& hash) = 0;
+	virtual MCTSStatus* createStatus() = 0;
 	virtual void resetMemory() = 0;
 
 	//MCTS logic

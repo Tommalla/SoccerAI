@@ -99,7 +99,6 @@ void MCTSAI::expand(Board& s, MCTSStatus* node) {
 	MCTSStatus* son = node->getFirstChild();
 	for (size_t id = 0; id < moves.size(); ++id, ++son) {
 		change = s.play(moves[id]);
-		son->setHash(s.getHash());
 		son->lastMoveId = moves[id];
 		s.undo(moves[id], change);
 	}

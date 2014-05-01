@@ -11,12 +11,9 @@ public:
 	Stat* getFirstChild() const;
 	size_t getNumChildren() const;
 	void setChildren(Stat* firstChild, const size_t& numChildren);
-	void setHash(const engine::Hash& hash);
-	engine::Hash getHash() const;
 	virtual void reset();
 
 private:
-	engine::Hash hash;
 	Stat* firstChild;
 	size_t numChildren;
 };
@@ -25,8 +22,18 @@ class MCTSStatus : public StatusTemplate<MCTSStatus> {
 public:
 	MCTSStatus();
 	virtual void reset();
+
 	uint32_t wins, plays;
 	DirId lastMoveId;
+};
+
+class AlphaBetaStatus : public StatusTemplate<AlphaBetaStatus> {
+public:
+	AlphaBetaStatus();
+	virtual void reset();
+
+	engine::Hash hash;
+	int alpha, beta;
 };
 
 template<class Stat>
@@ -51,20 +58,9 @@ void StatusTemplate<Stat>::setChildren(Stat* firstChild, const size_t& numChildr
 }
 
 template<class Stat>
-void StatusTemplate<Stat>::setHash(const engine::Hash& hash) {
-	this->hash = hash;
-}
-
-template<class Stat>
-engine::Hash StatusTemplate<Stat>::getHash() const {
-	return hash;
-}
-
-template<class Stat>
 void StatusTemplate<Stat>::reset() {
 	firstChild = nullptr;
 	numChildren = 0;
-	hash = 0;
 }
 
 #endif // STATUS_HPP

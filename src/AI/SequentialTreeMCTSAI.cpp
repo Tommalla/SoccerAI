@@ -4,7 +4,7 @@ SequentialTreeMCTSAI::SequentialTreeMCTSAI(const engine::Coord width, const engi
 : MCTSAI{width, height, expandBorder, memorySize} {}
 
 DirId SequentialTreeMCTSAI::generateMove() {
-	MCTSStatus* root = getOrCreateStatus(board.getHash());
+	MCTSStatus* root = createStatus();
 	expand(board, root);
 	for (size_t i = 0; i < 5000; ++i)
 		playout(board, root);
@@ -25,13 +25,10 @@ DirId SequentialTreeMCTSAI::generateMove() {
 	return res->lastMoveId;
 }
 
-MCTSStatus* SequentialTreeMCTSAI::getOrCreateStatus(const engine::Hash& hash) {
-	return memoryManager.create(hash);
+MCTSStatus* SequentialTreeMCTSAI::createStatus() {
+	return memoryManager.allocate();
 }
 
 void SequentialTreeMCTSAI::resetMemory() {
 	memoryManager.reset();
 }
-
-
-

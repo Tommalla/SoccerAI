@@ -9,7 +9,7 @@ public:
 
 protected:
 	virtual DirId generateMove();
-	virtual MCTSStatus* getOrCreateStatus(const engine::Hash& hash);
+	virtual MCTSStatus* createStatus();
 	virtual void resetMemory();
 
 };
