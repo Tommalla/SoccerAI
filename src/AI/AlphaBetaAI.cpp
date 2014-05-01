@@ -11,9 +11,7 @@ using namespace engine;
 AlphaBetaAI::AlphaBetaAI(const engine::Coord width, const engine::Coord height, const function<int(const Board&)>& value)
 : AI(width, height)
 , value{value}
-, maxDepth{0}
-, fieldsUsed{0}
-, fields{(width + 1) * (height + 1)} {}
+, maxDepth{0} {}
 
 DirId AlphaBetaAI::generateMove() {
 	Board copy{board};
@@ -25,7 +23,6 @@ DirId AlphaBetaAI::generateMove() {
 	assert(!moves.empty());
 	assert(!board.isGameFinished());
 
-	timeAvailable = timeLeft * fieldsUsed / fields / 10;
 	printDebug("%d / %d, time available: %lld\n", fieldsUsed, fields, timeAvailable);
 	beginTime = getTime();
 	operationsCounter = 0;
@@ -95,5 +92,4 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 
 void AlphaBetaAI::play(const DirId& move) {
 	AI::play(move);
-	++fieldsUsed;
 }

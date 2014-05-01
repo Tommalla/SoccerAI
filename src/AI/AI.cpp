@@ -8,7 +8,9 @@ using std::make_pair;
 
 AI::AI(const engine::Coord width, const engine::Coord height)
 : board{width, height}
-, alreadyMoved(false) {}
+, fieldsUsed{0}
+, fields{(width + 1) * (height + 1)}
+, alreadyMoved{false} {}
 
 void AI::play(const DirId& move) {
 	if (!alreadyMoved) {
@@ -16,6 +18,7 @@ void AI::play(const DirId& move) {
 		alreadyMoved = true;
 	}
 	history.push(make_pair(move, board.play(move)));
+	fieldsUsed++;
 }
 
 DirId AI::genMove() {
@@ -37,4 +40,6 @@ void AI::setTimeLeft(const int time) {
 	lastMoveTime = lastTimeLeft - timeLeft;
 	if (lastMoveTime < 0)
 		lastMoveTime = 0;
+
+	timeAvailable = timeLeft * fieldsUsed / fields / 10;
 }

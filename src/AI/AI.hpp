@@ -34,6 +34,8 @@ protected:
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
 	int timeLeft, lastTimeLeft, lastMoveTime;
+	engine::Time timeAvailable;
+	int fieldsUsed, fields;
 
 private:
 	bool alreadyMoved;
