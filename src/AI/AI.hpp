@@ -30,14 +30,19 @@ public:
 
 protected:
 	virtual DirId generateMove() = 0;
+	bool isTimeLeft();
 
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
-	int timeLeft, lastTimeLeft, lastMoveTime;
+	int timeLeft;
 	engine::Time timeAvailable;
-	int fieldsUsed, fields;
+	bool stopCalculations;
 
 private:
+	engine::Time beginTime;
+	int operationsCounter;
+	const int timeControlOps = 500;
+	int fieldsUsed, fields;
 	bool alreadyMoved;
 };
 

@@ -23,7 +23,12 @@ void AI::play(const DirId& move) {
 
 DirId AI::genMove() {
 	alreadyMoved = true;
-	return generateMove();
+	beginTime = getTime();
+	operationsCounter = 0;
+	stopCalculations = false;
+	auto res = generateMove();
+	printDebug("Time used: %llu/%llu\n", getTime() - beginTime, timeAvailable);
+	return res;
 }
 
 void AI::undo() {
@@ -35,11 +40,19 @@ void AI::undo() {
 }
 
 void AI::setTimeLeft(const int time) {
-	lastTimeLeft = timeLeft;
 	timeLeft = time;
-	lastMoveTime = lastTimeLeft - timeLeft;
-	if (lastMoveTime < 0)
-		lastMoveTime = 0;
-
 	timeAvailable = timeLeft * fieldsUsed / fields / 10;
 }
+
+bool AI::isTimeLeft() {
+	if (++operationsCounter >= timeControlOps) {
+		operationsCounter = 0;
+		if (getTime() - beginTime >= timeAvailable) {
+			stopCalculations = true;
+			return false;
+		}
+	}
+
+	return true;
+}
+

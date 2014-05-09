@@ -23,11 +23,6 @@ DirId AlphaBetaAI::generateMove() {
 	assert(!moves.empty());
 	assert(!board.isGameFinished());
 
-	printDebug("%d / %d, time available: %lld\n", fieldsUsed, fields, timeAvailable);
-	beginTime = getTime();
-	operationsCounter = 0;
-	stopCalculations = false;
-
 	for (maxDepth = 1, bestVal = newBestVal = -1; !stopCalculations && bestVal < INF; ++maxDepth, newBestVal = -1) {
 		for (auto m: moves) {
 			change = copy.play(m);
@@ -39,7 +34,7 @@ DirId AlphaBetaAI::generateMove() {
 				newRes = m;
 			}
 		}
-		
+
 		if (!stopCalculations || (newBestVal != -1 && bestVal < newBestVal)) {
 			bestVal = newBestVal;
 			res = newRes;
@@ -51,19 +46,9 @@ DirId AlphaBetaAI::generateMove() {
 }
 
 int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
-	//time control
-	if (++operationsCounter >= timeControlOps) {
-		operationsCounter = 0;
-		Time t = getTime();
-		if (t - beginTime >= timeAvailable) {
-			stopCalculations = true;
-			return value(s);
-		}
-	}
-
-	if (s.isGameFinished() || depth >= maxDepth) {
+	//time control and game end
+	if (!isTimeLeft() || s.isGameFinished() || depth >= maxDepth)
 		return value(s);
-	}
 
 	auto moves = s.getMoves();
 	bool minNode = !s.isRedActive();

@@ -15,10 +15,6 @@ private:
 	std::function<int(const Board&)> value;
 	//time control
 	unsigned int maxDepth;
-	engine::Time beginTime;
-	int operationsCounter;
-	bool stopCalculations;
-	const int timeControlOps = 500;
 };
 
 #endif // ALPHA_BETA_AI_HPP
