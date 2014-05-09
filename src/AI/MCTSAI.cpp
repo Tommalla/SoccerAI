@@ -26,6 +26,9 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 	node->plays++;
 	bool res = false;
 
+	if (!isTimeLeft())
+		return res;
+	
 	if (s.isGameFinished())
 		res = s.doesRedWin();
 	else {
@@ -39,7 +42,7 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 			res = advance(s, node);
 	}
 
-	if (res)
+	if (res || stopCalculations)	//no virtual loss at the end of time
 		node->wins++;
 	return res;
 }
@@ -74,6 +77,8 @@ bool MCTSAI::randomPlayout(Board& s) {
 	int id;
 
 	while (!s.isGameFinished()) {
+		if (!isTimeLeft())
+			break;
 		moves = s.getMoves();
 		id = moves.size() == 1 ? 0 : dist[moves.size() - 2](mt);
 		playHistory.push({moves[id], s.play(moves[id])});

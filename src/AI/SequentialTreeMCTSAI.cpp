@@ -6,13 +6,13 @@ SequentialTreeMCTSAI::SequentialTreeMCTSAI(const engine::Coord width, const engi
 DirId SequentialTreeMCTSAI::generateMove() {
 	MCTSStatus* root = createStatus();
 	expand(board, root);
-	for (size_t i = 0; i < 5000; ++i)
+	while (!stopCalculations)
 		playout(board, root);
 
 	MCTSStatus* iter = root->getFirstChild();
 	MCTSStatus* res = iter;
 	size_t num = root->getNumChildren();
-	double best = 0.0f;
+	double best = 0.0;
 	for (size_t i = 0; i < num; ++i, ++iter) {
 		double tmp = (double)iter->wins / iter->plays;
 		engine::printDebug("Possible: %d -> %.3lf (%lu/%lu)\n", iter->lastMoveId, tmp, iter->wins, iter->plays);
