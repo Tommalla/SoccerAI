@@ -56,16 +56,16 @@ inline bool MCTSAI::advance(Board& s, MCTSStatus* node) {
 bool MCTSAI::randomPlayout(Board& s) {
 	//TODO copy Board vs moves history
 	//TODO random % vs distribution
-	static std::mt19937 mt{std::random_device{}()};
-	static std::uniform_int_distribution<uint_fast8_t> dist[] = {
-		std::uniform_int_distribution<uint_fast8_t>(0, 1),
-		std::uniform_int_distribution<uint_fast8_t>(0, 2),
-		std::uniform_int_distribution<uint_fast8_t>(0, 3),
-		std::uniform_int_distribution<uint_fast8_t>(0, 4),
-		std::uniform_int_distribution<uint_fast8_t>(0, 5),
-		std::uniform_int_distribution<uint_fast8_t>(0, 6),
-		std::uniform_int_distribution<uint_fast8_t>(0, 7)
-	};
+// 	static std::mt19937 mt{std::random_device{}()};
+// 	static std::uniform_int_distribution<uint_fast8_t> dist[] = {
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 1),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 2),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 3),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 4),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 5),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 6),
+// 		std::uniform_int_distribution<uint_fast8_t>(0, 7)
+// 	};
 
 	std::stack<std::pair<DirId, bool>> playHistory;
 	std::pair<DirId, bool> elem;
@@ -75,7 +75,7 @@ bool MCTSAI::randomPlayout(Board& s) {
 
 	while (!s.isGameFinished()) {
 		moves = s.getMoves();
-		id = moves.size() == 1 ? 0 : dist[moves.size() - 2](mt);
+		id = rand() % moves.size()/*dist[moves.size() - 2](mt)*/;
 		playHistory.push({moves[id], s.play(moves[id])});
 	}
 
