@@ -14,10 +14,7 @@ public:
 	MemoryManager&& operator=(MemoryManager&& other) = delete;
 	~MemoryManager();
 
-	bool addChildren(Status* node, const size_t& num);
-	Status* allocate();
-	void reset();
-private:
+protected:
 	size_t end;
 	const size_t size;
 	Status* memory;
@@ -33,28 +30,5 @@ template<class Status>
 MemoryManager<Status>::~MemoryManager() {
 	delete[] memory;
 }
-
-template<class Status>
-bool MemoryManager<Status>::addChildren(Status* node, const size_t& num) {
-	if (num > size - end)
-		return false;
-	node->setChildren(allocate(), num);
-	for (size_t i = 0; i < num; ++i)
-		(memory + end - 1 + i)->reset();
-	end += num - 1;
-	return true;
-}
-
-template<class Status>
-Status* MemoryManager<Status>::allocate() {
-	return memory + end++;
-}
-
-template<class Status>
-void MemoryManager<Status>::reset() {
-	end = 0;
-}
-
-
 
 #endif // MEMORY_MANAGER_HPP

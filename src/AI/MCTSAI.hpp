@@ -3,7 +3,7 @@
 
 #include "AI.hpp"
 #include "Status.hpp"
-#include "MemoryManager.hpp"
+#include "ArrayMemoryManager.hpp"
 
 class MCTSAI: public AI {
 public:
@@ -45,7 +45,7 @@ protected:
 	MCTSStatus* pickSon(Board& s, MCTSStatus* node) const;
 
 	const size_t expandBorder;
-	MemoryManager<MCTSStatus> memoryManager;
+	ArrayMemoryManager<MCTSStatus> memoryManager;
 private:
 	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 };

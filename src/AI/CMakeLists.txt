@@ -7,6 +7,7 @@ set(HEADERS
 	Judge.hpp
 	Status.hpp
 	MemoryManager.hpp
+	ArrayMemoryManager.hpp
 	MCTSAI.hpp
 	SequentialTreeMCTSAI.hpp
 )
