@@ -1,21 +1,60 @@
 #include "Status.hpp"
 
+GraphStatus::GraphStatus()
+: hash{0} {}
+
+void GraphStatus::reset() {
+	hash = 0;
+}
+
 MCTSStatus::MCTSStatus()
-: StatusTemplate<MCTSStatus>{}
-, wins{0}
-, plays{0} {}
+: wins{0}
+, plays{0}
+, lastMoveId{-1} {}
 
 void MCTSStatus::reset() {
-	StatusTemplate<MCTSStatus>::reset();
-	lastMoveId = -1;
 	wins = plays = 0;
+	lastMoveId = -1;
+}
+
+bool MCTSStatus::isLeaf() const {
+	return false;
+}
+
+TreeMCTSStatus::TreeMCTSStatus()
+: MCTSStatus{}
+, firstChild{nullptr}
+, numChildren{0} {}
+
+TreeMCTSStatus* TreeMCTSStatus::getFirstChild() const {
+	return firstChild;
+}
+
+size_t TreeMCTSStatus::getNumChildren() const {
+	return numChildren;
+}
+
+void TreeMCTSStatus::setChildren(TreeMCTSStatus* firstChild, const size_t& numChildren) {
+	this->firstChild = firstChild;
+	this->numChildren = numChildren;
+}
+
+void TreeMCTSStatus::reset() {
+	MCTSStatus::reset();
+	firstChild = nullptr;
+	numChildren = 0;
+}
+
+bool TreeMCTSStatus::isLeaf() const {
+	return firstChild == nullptr;
 }
 
 AlphaBetaStatus::AlphaBetaStatus()
-: StatusTemplate<AlphaBetaStatus>{}
-, hash{0} {}
+: GraphStatus{}
+, alpha{0}
+, beta{0} {}
 
 void AlphaBetaStatus::reset() {
-	StatusTemplate<AlphaBetaStatus>::reset();
 	hash = 0;
+	alpha = beta = 0;
 }

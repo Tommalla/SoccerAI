@@ -1,6 +1,3 @@
-#include <cassert>
-#include <stack>
-#include <utility>
 #include <random>
 #include "MCTSAI.hpp"
 
@@ -8,8 +5,7 @@ using namespace engine;
 
 MCTSAI::MCTSAI(const Coord width, const Coord height, const size_t& expandBorder, const size_t& memorySize)
 : AI{width, height}
-, expandBorder{expandBorder}
-, memoryManager{memorySize} {}
+, expandBorder{expandBorder} {}
 
 
 void MCTSAI::play(const DirId& move) {
@@ -28,11 +24,11 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 
 	if (!isTimeLeft())
 		return res;
-	
+
 	if (s.isGameFinished())
 		res = s.doesRedWin();
 	else {
-		if (node->getFirstChild() == nullptr) {	//leaf
+		if (node->isLeaf()) {	//leaf
 			if (node->plays >= expandBorder) {
 				expand(s, node);
 				res = advance(s, node);
@@ -93,37 +89,6 @@ bool MCTSAI::randomPlayout(Board& s) {
 	}
 
 	return result;
-}
-
-void MCTSAI::expand(Board& s, MCTSStatus* node) {
-	auto moves = s.getMoves();
-	bool change;
-
-	bool added = memoryManager.addChildren(node, moves.size());
-	assert(added);
-	MCTSStatus* son = node->getFirstChild();
-	for (size_t id = 0; id < moves.size(); ++id, ++son) {
-		change = s.play(moves[id]);
-		son->lastMoveId = moves[id];
-		s.undo(moves[id], change);
-	}
-}
-
-MCTSStatus* MCTSAI::pickSon(Board& s, MCTSStatus* node) const {
-	MCTSStatus* iter = node->getFirstChild();
-	MCTSStatus* res = iter;
-	double tmp, bestVal = s.isRedActive() ? -INF : INF;
-	size_t num = node->getNumChildren();
-
-	for (size_t id = 0; id < num; ++id, ++iter) {
-		tmp = UCB(s, iter, node);
-		if ((s.isRedActive() ? tmp > bestVal : tmp < bestVal)) {
-			bestVal = tmp;
-			res = iter;
-		}
-	}
-
-	return res;
 }
 
 double MCTSAI::UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const {

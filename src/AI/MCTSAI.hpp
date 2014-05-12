@@ -1,6 +1,5 @@
 #ifndef MCTSAI_HPP
 #define MCTSAI_HPP
-
 #include "AI.hpp"
 #include "Status.hpp"
 #include "ArrayMemoryManager.hpp"
@@ -16,7 +15,6 @@ protected:
 	virtual DirId generateMove() = 0;
 
 	//getting statuses (nodes)
-	virtual MCTSStatus* createStatus() = 0;
 	virtual void resetMemory() = 0;
 
 	//MCTS logic
@@ -40,14 +38,12 @@ protected:
 	/**
 	 * @brief Expands leaf node with state s.
 	 */
-	void expand(Board& s, MCTSStatus* node);
+	virtual void expand(Board& s, MCTSStatus* node) = 0;
+	virtual MCTSStatus* pickSon(Board& s, MCTSStatus* node) const = 0;
 
-	MCTSStatus* pickSon(Board& s, MCTSStatus* node) const;
+	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 
 	const size_t expandBorder;
-	ArrayMemoryManager<MCTSStatus> memoryManager;
-private:
-	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 };
 
 #endif // MCTSAI_HPP

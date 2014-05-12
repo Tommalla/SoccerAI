@@ -1,16 +1,23 @@
+#include <cassert>
+#include <stack>
+#include <utility>
+
 #include "SequentialTreeMCTSAI.hpp"
 
+using namespace engine;
+
 SequentialTreeMCTSAI::SequentialTreeMCTSAI(const engine::Coord width, const engine::Coord height, const size_t& expandBorder, const size_t& memorySize)
-: MCTSAI{width, height, expandBorder, memorySize} {}
+: MCTSAI{width, height, expandBorder, memorySize}
+, memoryManager{memorySize} {}
 
 DirId SequentialTreeMCTSAI::generateMove() {
-	MCTSStatus* root = createStatus();
+	TreeMCTSStatus* root = memoryManager.allocate();
 	expand(board, root);
 	while (!stopCalculations)
 		playout(board, root);
 
-	MCTSStatus* iter = root->getFirstChild();
-	MCTSStatus* res = iter;
+	TreeMCTSStatus* iter = root->getFirstChild();
+	TreeMCTSStatus* res = iter;
 	size_t num = root->getNumChildren();
 	double best = 0.0;
 	for (size_t i = 0; i < num; ++i, ++iter) {
@@ -25,10 +32,42 @@ DirId SequentialTreeMCTSAI::generateMove() {
 	return res->lastMoveId;
 }
 
-MCTSStatus* SequentialTreeMCTSAI::createStatus() {
-	return memoryManager.allocate();
-}
-
 void SequentialTreeMCTSAI::resetMemory() {
 	memoryManager.reset();
 }
+
+void SequentialTreeMCTSAI::expand(Board& s, MCTSStatus* node) {
+	auto moves = s.getMoves();
+	bool change;
+
+	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
+
+	bool added = memoryManager.addChildren(v, moves.size());
+	assert(added);
+	TreeMCTSStatus* son = v->getFirstChild();
+	for (size_t id = 0; id < moves.size(); ++id, ++son) {
+		change = s.play(moves[id]);
+		son->lastMoveId = moves[id];
+		s.undo(moves[id], change);
+	}
+}
+
+MCTSStatus* SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
+	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
+	TreeMCTSStatus* iter = v->getFirstChild();
+	TreeMCTSStatus* res = iter;
+	double tmp, bestVal = s.isRedActive() ? -INF : INF;
+	size_t num = v->getNumChildren();
+
+	for (size_t id = 0; id < num; ++id, ++iter) {
+		tmp = UCB(s, iter, node);
+		if ((s.isRedActive() ? tmp > bestVal : tmp < bestVal)) {
+			bestVal = tmp;
+			res = iter;
+		}
+	}
+
+	return res;
+}
+
+

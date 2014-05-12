@@ -1,6 +1,7 @@
 #ifndef SEQUENTIAL_TREE_MCTSAI_HPP
 #define SEQUENTIAL_TREE_MCTSAI_HPP
 #include "MCTSAI.hpp"
+#include "Status.hpp"
 
 class SequentialTreeMCTSAI : public MCTSAI {
 public:
@@ -9,9 +10,11 @@ public:
 
 protected:
 	virtual DirId generateMove();
-	virtual MCTSStatus* createStatus();
 	virtual void resetMemory();
+	virtual void expand(Board& s, MCTSStatus* node);
+	virtual MCTSStatus* pickSon(Board& s, MCTSStatus* node) const;
 
+	ArrayMemoryManager<TreeMCTSStatus> memoryManager;
 };
 
 #endif // SEQUENTIAL_TREE_MCTSAI_HPP

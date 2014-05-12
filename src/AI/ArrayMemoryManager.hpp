@@ -18,7 +18,6 @@ public:
 
 template<class Status>
 bool ArrayMemoryManager<Status>::addChildren(Status* node, const size_t& num) {
-
 	if (num > size - end)
 		return false;
 	node->setChildren(allocate(), num);
