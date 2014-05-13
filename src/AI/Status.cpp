@@ -51,10 +51,11 @@ bool TreeMCTSStatus::isLeaf() const {
 
 AlphaBetaStatus::AlphaBetaStatus()
 : GraphStatus{}
-, alpha{0}
-, beta{0} {}
+, alpha{-engine::INF}
+, beta{engine::INF} {}
 
 void AlphaBetaStatus::reset() {
 	hash = 0;
-	alpha = beta = 0;
+	alpha = -engine::INF;
+	beta = engine::INF;
 }

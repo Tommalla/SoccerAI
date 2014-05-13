@@ -50,6 +50,8 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	if (!isTimeLeft() || s.isGameFinished() || depth >= maxDepth)
 		return value(s);
 
+	AlphaBetaStatus stat = getNode(s.getHash());
+
 	auto moves = s.getMoves();
 	bool minNode = !s.isRedActive();
 	int r = INF * (minNode ? 1 : -1);
@@ -59,12 +61,23 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	for (const auto& m: moves) {
 		change = s.play(m);
 
-		int x = gen(s, (minNode ? alpha : max(r, alpha)), (minNode ? min(r, beta) : beta), depth + 1);
-		if (minNode ? x <= alpha : x >= beta) {
+		int x = gen(s, (minNode ? stat.alpha : max(r, stat.alpha)), (minNode ? min(r, stat.beta) : stat.beta), depth + 1);
+		if (minNode ? x <= stat.alpha : x >= stat.beta) {
 			s.undo(m, change);
+			if (minNode)
+				stat.alpha = x;
+			else
+				stat.beta = x;
+			saveNode(stat);
 			return x;
 		}
 		r = minNode ? min(r, x) : max(r, x);
+
+		if (minNode)
+			stat.beta = min(stat.beta, r);
+		else
+			stat.alpha = max(stat.alpha, r);
+		saveNode(stat);
 
 		s.undo(m, change);
 
