@@ -12,14 +12,15 @@ public:
 	virtual void play(const DirId& move);
 
 protected:
-	virtual AlphaBetaStatus getNode(const engine::Hash& hash) = 0;	//if there ever is a need to, we might
+	virtual std::pair<bool, AlphaBetaStatus> getNode(const engine::Hash& hash) = 0;	//if there ever is a need to, we might
 									//want to change the return value to
 									//a shared_ptr to a copy
 	virtual void saveNode(const AlphaBetaStatus& node) = 0;
+	virtual DirId generateMove();
 
 private:
-	virtual DirId generateMove();
 	int gen(Board& s, int alpha, int beta, const unsigned int depth);
+	void storeValue(const int value, const unsigned int depth, const int alpha, const int beta, AlphaBetaStatus& node);
 
 	std::function<int(const Board&)> value;
 	//time control

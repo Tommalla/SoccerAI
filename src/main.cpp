@@ -12,7 +12,8 @@
 #include "AI/AIFactory.hpp"
 
 // #define RANDOM_AI
-#define ALPHA_BETA_AI
+// #define TREE_ALPHA_BETA_AI
+#define GRAPH_ALPHA_BETA_AI
 // #define SEQUENTIAL_TREE_MCTS
 
 using namespace std;
@@ -52,8 +53,11 @@ int main() {
 	#ifdef RANDOM_AI
 	ai = AIFactory::create(AIFactory::AIType::RANDOM, w, h);
 	#endif
-	#ifdef ALPHA_BETA_AI
+	#ifdef TREE_ALPHA_BETA_AI
 	ai = AIFactory::create(AIFactory::AIType::TREE_ALPHA_BETA, w, h);
+	#endif
+	#ifdef GRAPH_ALPHA_BETA_AI
+	ai = AIFactory::create(AIFactory::AIType::GRAPH_ALPHA_BETA, w, h);
 	#endif
 	#ifdef SEQUENTIAL_TREE_MCTS
 	ai = AIFactory::create(AIFactory::AIType::MCTS_SEQUENTIAL_TREE, w, h);

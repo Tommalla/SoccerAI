@@ -46,11 +46,23 @@ DirId AlphaBetaAI::generateMove() {
 }
 
 int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
-	//time control and game end
-	if (!isTimeLeft() || s.isGameFinished() || depth >= maxDepth)
-		return value(s);
+	auto p = getNode(s.getHash());
+	if (p.first == true && p.second.depth >= maxDepth - depth) {
+		if (p.second.type == AlphaBetaStatus::BoundType::LOWER)
+			alpha = p.second.result;
+		else if (p.second.type == AlphaBetaStatus::BoundType::UPPER)
+			beta = p.second.result;
 
-	AlphaBetaStatus stat = getNode(s.getHash());
+		if (p.second.type == AlphaBetaStatus::BoundType::EXACT || alpha >= beta)
+			return p.second.result;
+	}
+
+	//time control and game end
+	if (!isTimeLeft() || s.isGameFinished() || depth >= maxDepth) {
+		int v = value(s);
+		storeValue(v, depth, alpha, beta, p.second);
+		return v;
+	}
 
 	auto moves = s.getMoves();
 	bool minNode = !s.isRedActive();
@@ -61,23 +73,16 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 	for (const auto& m: moves) {
 		change = s.play(m);
 
-		int x = gen(s, (minNode ? stat.alpha : max(r, stat.alpha)), (minNode ? min(r, stat.beta) : stat.beta), depth + 1);
-		if (minNode ? x <= stat.alpha : x >= stat.beta) {
+		int x = gen(s, (minNode ? alpha : max(r, alpha)), (minNode ? min(r, beta) : beta), depth + 1);
+		if (minNode ? x <= alpha : x >= beta) {
 			s.undo(m, change);
-			if (minNode)
-				stat.alpha = x;
-			else
-				stat.beta = x;
-			saveNode(stat);
+			storeValue(x, depth, alpha, beta, p.second);
 			return x;
 		}
+
 		r = minNode ? min(r, x) : max(r, x);
 
-		if (minNode)
-			stat.beta = min(stat.beta, r);
-		else
-			stat.alpha = max(stat.alpha, r);
-		saveNode(stat);
+		storeValue(r, depth, alpha, beta, p.second);
 
 		s.undo(m, change);
 
@@ -87,6 +92,21 @@ int AlphaBetaAI::gen(Board& s, int alpha, int beta, const unsigned int depth) {
 
 	return r;
 }
+
+void AlphaBetaAI::storeValue(const int value, const unsigned int depth, const int alpha, const int beta, AlphaBetaStatus& node) {
+	if (alpha < value) {
+		if (value < beta)
+			node.type = AlphaBetaStatus::BoundType::EXACT;
+		else
+			node.type = AlphaBetaStatus::BoundType::UPPER;
+	} else
+		node.type = AlphaBetaStatus::BoundType::LOWER;
+
+	node.result = value;
+	node.depth = maxDepth - depth;
+	saveNode(node);
+}
+
 
 void AlphaBetaAI::play(const DirId& move) {
 	AI::play(move);

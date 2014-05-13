@@ -43,10 +43,18 @@ private:
 
 class AlphaBetaStatus : public GraphStatus {
 public:
+	enum class BoundType: uint8_t {
+		UPPER,
+		LOWER,
+		EXACT
+	};
+
 	AlphaBetaStatus();
 	virtual void reset();
 
-	int alpha, beta;
+	int result;
+	unsigned int depth;
+	BoundType type;
 };
 
 
