@@ -1,3 +1,5 @@
+#undef NDEBUG
+
 #include <cstdio>
 #include <set>
 #include <ctime>

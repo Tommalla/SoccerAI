@@ -1,3 +1,5 @@
+#undef NDEBUG
+
 #include <cstdio>
 #include <cassert>
 #include <functional>
@@ -11,7 +13,7 @@ engine::Time generateRandom(std::function<int(void)> f) {
 	engine::Time begin = engine::getTime();
 	int tmp;
 	for (int i = 0; i < num; ++i)
-		tmp = f();
+		tmp = f() * tmp;
 	return engine::getTime() - begin;
 }
 

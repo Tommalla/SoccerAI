@@ -15,7 +15,7 @@
 // #define TREE_ALPHA_BETA_AI
 // #define GRAPH_ALPHA_BETA_AI
 // #define SEQUENTIAL_TREE_MCTS_AI
-#define GRAPH_MAP_MCTS_AI
+// #define GRAPH_MAP_MCTS_AI
 
 using namespace std;
 
