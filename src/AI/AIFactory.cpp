@@ -22,13 +22,13 @@ shared_ptr<AI> AIFactory::create(const AIType& type, const Coord width, const Co
 			res = shared_ptr<AI>(new TreeAlphaBetaAI(width, height, objectiveFunctions::simpleDistance));
 			break;
 		case AIType::GRAPH_ALPHA_BETA:
-			res = shared_ptr<AI>(new GraphAlphaBetaAI(width, height, objectiveFunctions::simpleDistance, 10000000));
+			res = shared_ptr<AI>(new GraphAlphaBetaAI(width, height, objectiveFunctions::simpleDistance, defaultMemorySize));
 			break;
 		case AIType::MCTS_SEQUENTIAL_TREE:
-			res = shared_ptr<AI>(new SequentialTreeMCTSAI(width, height, 30, 100000));
+			res = shared_ptr<AI>(new SequentialTreeMCTSAI(width, height, 30, defaultMemorySize));
 			break;
 		case AIType::MCTS_GRAPH_MAP:
-			res = shared_ptr<AI>(new GraphMapMCTSAI(width, height, 30, 10000000));
+			res = shared_ptr<AI>(new GraphMapMCTSAI(width, height, 30, defaultMemorySize));
 			break;
 		default:
 			throw WrongAITypeException();
