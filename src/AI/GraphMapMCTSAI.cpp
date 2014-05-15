@@ -9,12 +9,10 @@ void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();
 	Hash hash;
 
-	MCTSStatus newNode;
-	newNode.wins = newNode.plays = 0;
 	for (const auto& m: moves) {
 		hash = s.getHashAfter(m);
 		if (map.find(hash) == map.end())
-			map[hash] = new MCTSStatus(newNode);
+			map[hash] = new MCTSStatus();
 	}
 }
 
@@ -65,10 +63,19 @@ DirId GraphMapMCTSAI::generateMove() {
 }
 
 void GraphMapMCTSAI::resetMemory() {
-	for (const auto& k: map)
-		delete k.second;
+	reuseSet.clear();
+	reuseDFS(board);
 
-	map.clear();
+	printDebug("reuseSet.size() = %lu, map.size() = %lu\n", reuseSet.size(), map.size());
+
+	for (MapType::iterator iter = map.begin(), tmpIter; iter != map.end();)
+		if (reuseSet.find(iter->first) == reuseSet.end()) {
+			delete iter->second;
+			tmpIter = iter;
+			++iter;
+			map.erase(tmpIter);
+		} else
+			++iter;
 }
 
 bool GraphMapMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
@@ -90,4 +97,24 @@ MCTSStatus* GraphMapMCTSAI::getOrCreate(const engine::Hash& hash) {
 		return map.at(hash);
 	return (map[hash] = new MCTSStatus());
 }
+
+void GraphMapMCTSAI::reuseDFS(Board& s) {
+	auto moves = s.getMoves();
+	bool change;
+	Hash hash;
+
+	for (const auto& m: moves) {
+		change = s.play(m);
+		hash = s.getHash();
+
+		MapType::iterator iter = map.find(s.getHash());
+		if (iter != map.end() && reuseSet.find(iter->first) == reuseSet.end()) {
+			reuseSet.insert(hash);
+			reuseDFS(s);
+		}
+
+		s.undo(m, change);
+	}
+}
+
 
