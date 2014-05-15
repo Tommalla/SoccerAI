@@ -28,7 +28,7 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 	if (s.isGameFinished())
 		res = s.doesRedWin();
 	else {
-		if (node->isLeaf()) {	//leaf
+		if (isLeaf(s, node)) {	//leaf
 			if (node->plays >= expandBorder) {
 				expand(s, node);
 				res = advance(s, node);
@@ -44,10 +44,10 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 }
 
 inline bool MCTSAI::advance(Board& s, MCTSStatus* node) {
-	MCTSStatus* son = pickSon(s, node);
-	bool change = s.play(son->lastMoveId);
-	bool res = playout(s, son);
-	s.undo(son->lastMoveId, change);
+	auto son = pickSon(s, node);
+	bool change = s.play(son.second);
+	bool res = playout(s, son.first);
+	s.undo(son.second, change);
 	return res;
 }
 

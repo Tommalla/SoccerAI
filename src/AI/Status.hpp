@@ -7,6 +7,7 @@
 class StatusTemplate {
 public:
 	virtual void reset() = 0;
+	virtual ~StatusTemplate() {};
 };
 
 class GraphStatus : public StatusTemplate {
@@ -21,10 +22,8 @@ class MCTSStatus : public StatusTemplate {
 public:
 	MCTSStatus();
 	virtual void reset();
-	virtual bool isLeaf() const;
 
 	uint32_t wins, plays;
-	DirId lastMoveId;
 };
 
 class TreeMCTSStatus : public MCTSStatus {
@@ -34,7 +33,8 @@ public:
 	size_t getNumChildren() const;
 	void setChildren(TreeMCTSStatus* firstChild, const size_t& numChildren);
 	virtual void reset();
-	virtual bool isLeaf() const;
+
+	DirId lastMoveId;
 
 private:
 	TreeMCTSStatus* firstChild;

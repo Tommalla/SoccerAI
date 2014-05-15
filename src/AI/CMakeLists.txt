@@ -13,6 +13,7 @@ set(HEADERS
 	TranspositionTable.hpp
 	TreeAlphaBetaAI.hpp
 	GraphAlphaBetaAI.hpp
+	GraphMapMCTSAI.hpp
 )
 
 set(SOURCES
@@ -27,6 +28,7 @@ set(SOURCES
 	SequentialTreeMCTSAI.cpp
 	TreeAlphaBetaAI.cpp
 	GraphAlphaBetaAI.cpp
+	GraphMapMCTSAI.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})

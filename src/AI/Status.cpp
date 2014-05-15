@@ -9,20 +9,15 @@ void GraphStatus::reset() {
 
 MCTSStatus::MCTSStatus()
 : wins{0}
-, plays{0}
-, lastMoveId{-1} {}
+, plays{0} {}
 
 void MCTSStatus::reset() {
 	wins = plays = 0;
-	lastMoveId = -1;
-}
-
-bool MCTSStatus::isLeaf() const {
-	return false;
 }
 
 TreeMCTSStatus::TreeMCTSStatus()
 : MCTSStatus{}
+, lastMoveId{-1}
 , firstChild{nullptr}
 , numChildren{0} {}
 
@@ -41,12 +36,9 @@ void TreeMCTSStatus::setChildren(TreeMCTSStatus* firstChild, const size_t& numCh
 
 void TreeMCTSStatus::reset() {
 	MCTSStatus::reset();
+	lastMoveId = -1;
 	firstChild = nullptr;
 	numChildren = 0;
-}
-
-bool TreeMCTSStatus::isLeaf() const {
-	return firstChild == nullptr;
 }
 
 AlphaBetaStatus::AlphaBetaStatus()

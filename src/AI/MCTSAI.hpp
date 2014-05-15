@@ -17,6 +17,8 @@ protected:
 	//getting statuses (nodes)
 	virtual void resetMemory() = 0;
 
+	virtual bool isLeaf(Board& s, MCTSStatus* node) = 0;
+
 	//MCTS logic
 	/**
 	 * @brief Performs a Monte-Carlo playout in node with state s.
@@ -39,7 +41,7 @@ protected:
 	 * @brief Expands leaf node with state s.
 	 */
 	virtual void expand(Board& s, MCTSStatus* node) = 0;
-	virtual MCTSStatus* pickSon(Board& s, MCTSStatus* node) const = 0;
+	virtual std::pair<MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const = 0;
 
 	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 

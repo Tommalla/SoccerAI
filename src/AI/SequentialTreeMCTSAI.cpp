@@ -38,21 +38,17 @@ void SequentialTreeMCTSAI::resetMemory() {
 
 void SequentialTreeMCTSAI::expand(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();
-	bool change;
 
 	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
 
 	bool added = memoryManager.addChildren(v, moves.size());
 	assert(added);
 	TreeMCTSStatus* son = v->getFirstChild();
-	for (size_t id = 0; id < moves.size(); ++id, ++son) {
-		change = s.play(moves[id]);
+	for (size_t id = 0; id < moves.size(); ++id, ++son)
 		son->lastMoveId = moves[id];
-		s.undo(moves[id], change);
-	}
 }
 
-MCTSStatus* SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
+std::pair<MCTSStatus*, DirId> SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
 	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
 	TreeMCTSStatus* iter = v->getFirstChild();
 	TreeMCTSStatus* res = iter;
@@ -67,7 +63,11 @@ MCTSStatus* SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
 		}
 	}
 
-	return res;
+	return {res, res->lastMoveId};
 }
 
+bool SequentialTreeMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
+	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
+	return v->getFirstChild() == nullptr;
+}
 
