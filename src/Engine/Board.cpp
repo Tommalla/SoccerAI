@@ -139,6 +139,22 @@ vector< DirId > Board::getMoves() const {
 	return res;
 }
 
+Hash Board::getHashAfter(const DirId& moveId) const {
+	assert(canGo(moveId));
+
+	Hash res = currentHash;
+	Field dst = position + directions[moveId];
+
+	res ^= hash[position * moveId];
+	res ^= hash[dst * (directions.size() - moveId - 1)];
+
+	if (edges[dst] == 0)
+		res ^= playerRedHash;
+
+	return res;
+}
+
+
 bool Board::isRedActive() const {
 	return playerRed;
 }

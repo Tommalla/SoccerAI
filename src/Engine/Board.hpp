@@ -49,6 +49,10 @@ public:
 	 */
 	std::vector<DirId> getMoves() const;
 	/**
+	 * @brief Returns the board hash after performing move moveId.
+	 */
+	engine::Hash getHashAfter(const DirId& moveId) const;
+	/**
 	 * @brief True if the active player is Red. False otherwise.
 	 * Invariant: either Blue or Red player is active.
 	 */
