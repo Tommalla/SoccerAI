@@ -1,15 +1,11 @@
-#include "Judge.hpp"
+#include "judge.hpp"
 #include "../Engine/Board.hpp"
 
 using std::shared_ptr;
 using namespace engine;
 
-Judge::Judge(const engine::Coord width, const engine::Coord height)
-: width{width}
-, height{height} {}
-
-Judge::AIResult Judge::play(const AIFactory::AIType& AI1, const AIFactory::AIType& AI2, const Time& roundTime) const {
-	shared_ptr<AI> ai[2] = {AIFactory::create(AI1, width, height), AIFactory::create(AI2, width, height)};
+judge::AIResult judge::play(const shared_ptr< AI >& AI1, const shared_ptr< AI >& AI2, const Coord& width, const Coord& height, const Time& roundTime) {
+	shared_ptr<AI> ai[2] = {AI1, AI2};
 	Board board(width, height);
 	Time t[2], beginTime, endTime;
 	t[0] = t[1] = 0;
@@ -53,11 +49,11 @@ Judge::AIResult Judge::play(const AIFactory::AIType& AI1, const AIFactory::AITyp
 	return res;
 }
 
-std::pair< int, int > Judge::compare(AIFactory::AIType AI1, AIFactory::AIType AI2, int battles, const Time& roundTime) const {
+std::pair< int, int > judge::compare(AIFactory::AIType AI1, AIFactory::AIType AI2, const Coord& width, const Coord& height, int battles, const Time& roundTime) {
 	int res[2] = {0, 0};
 	for (int t = 0; t < 2; ++t) {
 		for (int qty = 0; qty < battles; ++qty)
-			if (play(AI1, AI2, roundTime).won)
+			if (play(AIFactory::create(AI1, width, height), AIFactory::create(AI2, width, height), width, height, roundTime).won)
 				++res[t];
 
 		std::swap(AI1, AI2);

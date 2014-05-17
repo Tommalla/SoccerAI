@@ -8,6 +8,9 @@ target_link_libraries(SoccerAI Engine AI)
 add_executable(judge judge.cpp)
 target_link_libraries(judge Engine AI)
 
+add_executable(mctsEvolve mctsEvolve.cpp)
+target_link_libraries(mctsEvolve Engine AI)
+
 set (CMAKE_CXX_FLAGS "${FINAL_FLAGS} -DGRAPH_ALPHA_BETA_AI")
 add_executable(AlphaBeta main.cpp)
 target_link_libraries(AlphaBeta Engine AI)

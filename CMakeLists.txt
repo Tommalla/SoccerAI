@@ -5,8 +5,9 @@ project(SoccerAI)
 set (BASE_FLAGS "-Wall -std=c++11")
 set (RELEASE_FLAGS "-O2 -DNDEBUG")
 set (DEBUG_FLAGS "-ggdb -pg")
+set (EVOLUTION_FLAGS "${RELEASE_FLAGS} -pthread -DNDEBUG")
 
-set (FINAL_FLAGS "${BASE_FLAGS} ${DEBUG_FLAGS}")
+set (FINAL_FLAGS "${BASE_FLAGS} ${EVOLUTION_FLAGS}")
 
 set (CMAKE_CXX_FLAGS "${FINAL_FLAGS}")
 

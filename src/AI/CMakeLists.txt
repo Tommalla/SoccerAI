@@ -4,7 +4,7 @@ set(HEADERS
 	AlphaBetaAI.hpp
 	objectiveFunctions.hpp
 	AIFactory.hpp
-	Judge.hpp
+	judge.hpp
 	Status.hpp
 	MemoryManager.hpp
 	ArrayMemoryManager.hpp
@@ -22,7 +22,7 @@ set(SOURCES
 	AlphaBetaAI.cpp
 	objectiveFunctions.cpp
 	AIFactory.cpp
-	Judge.cpp
+	judge.cpp
 	Status.cpp
 	MCTSAI.cpp
 	SequentialTreeMCTSAI.cpp
