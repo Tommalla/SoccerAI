@@ -23,13 +23,13 @@ using std::sort;
 using namespace engine;
 using namespace judge;
 
-const double maxC = 500.0;
-const int maxExpandBorder = 100;
+double maxC;
+size_t maxExpandBorder;
+int roundTime;
 const int numThreads = 3;
 const int numMCTS = 6;
 const Coord width = 8;
 const Coord height = 10;
-const int roundTime = 60000;
 
 struct Solution {
 	double c;
@@ -88,7 +88,16 @@ Solution mutate(Solution sol) {
 	return sol;
 }
 
-int main () {
+int main (int argc, char** argv) {
+	if (argc != 4) {
+		puts("Wrong usage! Correct: ./mctsEvolve <max c> <max expandBorder> <round time>");
+		return 1;
+	}
+
+	maxC = atof(argv[1]);
+	maxExpandBorder = atoi(argv[2]);
+	roundTime = atoi(argv[3]);
+
 	Solution sol[numMCTS];
 	int id[numMCTS];
 	int scores[numMCTS];
