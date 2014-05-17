@@ -3,9 +3,10 @@
 
 using namespace engine;
 
-MCTSAI::MCTSAI(const Coord width, const Coord height, const size_t& expandBorder, const size_t& memorySize)
+MCTSAI::MCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
 : AI{width, height}
-, expandBorder{expandBorder} {}
+, expandBorder{expandBorder}
+, c{c} {}
 
 
 void MCTSAI::play(const DirId& move) {
@@ -82,7 +83,7 @@ bool MCTSAI::randomPlayout(Board& s) {
 }
 
 double MCTSAI::UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const {
-	double minMax = s.isRedActive() ? 1.0 : -1.0;
+	double minMax = c * (s.isRedActive() ? 1.0 : -1.0);
 	if (node->plays == 0)
 		return minMax * engine::INF;
 	return (double)node->wins / node->plays +  minMax * sqrt(log(parent->plays) / node->plays);

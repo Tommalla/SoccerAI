@@ -5,7 +5,7 @@
 
 class SequentialTreeMCTSAI : public MCTSAI {
 public:
-	SequentialTreeMCTSAI(const engine::Coord width, const engine::Coord height, const size_t& expandBorder,
+	SequentialTreeMCTSAI(const engine::Coord width, const engine::Coord height, const double& c, const size_t& expandBorder,
 			     const size_t& memorySize);
 
 protected:

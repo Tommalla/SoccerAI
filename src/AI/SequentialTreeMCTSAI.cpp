@@ -6,8 +6,8 @@
 
 using namespace engine;
 
-SequentialTreeMCTSAI::SequentialTreeMCTSAI(const engine::Coord width, const engine::Coord height, const size_t& expandBorder, const size_t& memorySize)
-: MCTSAI{width, height, expandBorder, memorySize}
+SequentialTreeMCTSAI::SequentialTreeMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
+: MCTSAI{width, height, c, expandBorder, memorySize}
 , memoryManager{memorySize} {}
 
 DirId SequentialTreeMCTSAI::generateMove() {

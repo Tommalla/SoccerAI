@@ -2,8 +2,8 @@
 
 using namespace engine;
 
-GraphMapMCTSAI::GraphMapMCTSAI(const Coord width, const Coord height, const size_t& expandBorder, const size_t& memorySize)
-: MCTSAI{width, height, expandBorder, memorySize} {}
+GraphMapMCTSAI::GraphMapMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
+: MCTSAI{width, height, c, expandBorder, memorySize} {}
 
 void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();

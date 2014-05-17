@@ -6,7 +6,7 @@
 
 class MCTSAI: public AI {
 public:
-	MCTSAI(const engine::Coord width, const engine::Coord height, const size_t& expandBorder,
+	MCTSAI(const engine::Coord width, const engine::Coord height, const double& c, const size_t& expandBorder,
 		const size_t& memorySize);
 	virtual void play(const DirId& move);
 	virtual void undo();
@@ -46,6 +46,9 @@ protected:
 	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 
 	const size_t expandBorder;
+
+private:
+	const double c;
 };
 
 #endif // MCTSAI_HPP

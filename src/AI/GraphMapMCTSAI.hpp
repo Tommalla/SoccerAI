@@ -8,7 +8,7 @@
 class GraphMapMCTSAI: public MCTSAI {
 	typedef std::unordered_map<engine::Hash, MCTSStatus*> MapType;
 public:
-	GraphMapMCTSAI(const engine::Coord width, const engine::Coord height, const size_t& expandBorder, const size_t& memorySize);
+	GraphMapMCTSAI(const engine::Coord width, const engine::Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize);
 
 protected:
 	virtual void expand(Board& s, MCTSStatus* node);
