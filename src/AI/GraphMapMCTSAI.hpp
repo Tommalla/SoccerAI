@@ -23,9 +23,12 @@ protected:
 private:
 	MCTSStatus* getOrCreateNode(const engine::Hash& hash);
 	void reuseDFS(Board& s);
+	void reuseEdgeDFS(Board& s);
+	void removeUnusedValues(MapType& from, const std::unordered_set<engine::Hash>& omit);
 
 	MapType map;
 	std::unordered_set<engine::Hash> reuseSet;
+	std::unordered_set<engine::Hash> reuseEdgeSet;
 	MapType edgeMap;
 };
 

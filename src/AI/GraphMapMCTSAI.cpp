@@ -73,20 +73,15 @@ DirId GraphMapMCTSAI::generateMove() {
 
 void GraphMapMCTSAI::resetMemory() {
 	reuseSet.clear();
+	reuseEdgeSet.clear();
 	reuseDFS(board);
+	reuseEdgeDFS(board);
 
-	printDebug("reuseSet.size() = %lu, map.size() = %lu\n", reuseSet.size(), map.size());
+	printDebug("reuseSet.size() = %lu, map.size() = %lu\nreuseEdgeSet.size() = %lu, edgeMap.size() = %lu\n",
+		   reuseSet.size(), map.size(), reuseEdgeSet.size(), edgeMap.size());
 
-	//FIXME reuse edges
-
-	for (MapType::iterator iter = map.begin(), tmpIter; iter != map.end();)
-		if (reuseSet.find(iter->first) == reuseSet.end()) {
-			delete iter->second;
-			tmpIter = iter;
-			++iter;
-			map.erase(tmpIter);
-		} else
-			++iter;
+	removeUnusedValues(map, reuseSet);
+	removeUnusedValues(edgeMap, reuseEdgeSet);
 }
 
 bool GraphMapMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
@@ -119,7 +114,7 @@ void GraphMapMCTSAI::reuseDFS(Board& s) {
 		change = s.play(m);
 		hash = s.getHash();
 
-		MapType::iterator iter = map.find(s.getHash());
+		MapType::iterator iter = map.find(hash);
 		if (iter != map.end() && reuseSet.find(iter->first) == reuseSet.end()) {
 			reuseSet.insert(hash);
 			reuseDFS(s);
@@ -128,5 +123,35 @@ void GraphMapMCTSAI::reuseDFS(Board& s) {
 		s.undo(m, change);
 	}
 }
+
+void GraphMapMCTSAI::reuseEdgeDFS(Board& s) {
+	auto moves = s.getMoves();
+	Hash edgeHash;
+
+	for (const auto& m: moves) {
+		edgeHash = s.getMoveHash(m);
+
+		MapType::iterator iter = edgeMap.find(edgeHash);
+		if (iter != edgeMap.end() && reuseEdgeSet.find(iter->first) == reuseEdgeSet.end()) {
+			reuseEdgeSet.insert(edgeHash);
+			bool change = s.play(m);
+			reuseEdgeDFS(s);
+			s.undo(m, change);
+		}
+	}
+}
+
+void GraphMapMCTSAI::removeUnusedValues(GraphMapMCTSAI::MapType& from, const std::unordered_set< Hash >& omit) {
+	for (MapType::iterator iter = from.begin(), tmpIter; iter != from.end();)
+		if (omit.find(iter->first) == omit.end()) {
+			delete iter->second;
+			tmpIter = iter;
+			++iter;
+			from.erase(tmpIter);
+		} else
+			++iter;
+}
+
+
 
 
