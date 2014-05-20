@@ -39,6 +39,9 @@ DirId AlphaBetaAI::generateMove() {
 			bestVal = newBestVal;
 			res = newRes;
 		}
+
+		if (newBestVal == -INF)	//we've already lost, so why use any more time?
+			break;
 	}
 
 	printDebug("maxDepth = %d, bestVal = %d\n", maxDepth, bestVal);
