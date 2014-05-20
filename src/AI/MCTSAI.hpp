@@ -1,5 +1,6 @@
 #ifndef MCTSAI_HPP
 #define MCTSAI_HPP
+#include <tuple>
 #include "AI.hpp"
 #include "Status.hpp"
 #include "ArrayMemoryManager.hpp"
@@ -24,7 +25,7 @@ protected:
 	 * @brief Performs a Monte-Carlo playout in node with state s.
 	 * @return True if red wins. False otherwise.
 	 */
-	bool playout(Board& s, MCTSStatus* node);
+	bool playout(Board& s, MCTSStatus* node, MCTSStatus* edge);
 	/**
 	 * @brief A subprocedure of playout. Picks the best son and runs playout on it.
 	 * Assumption: node is not a leaf.
@@ -41,7 +42,7 @@ protected:
 	 * @brief Expands leaf node with state s.
 	 */
 	virtual void expand(Board& s, MCTSStatus* node) = 0;
-	virtual std::pair<MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const = 0;
+	virtual std::tuple<MCTSStatus*, MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const = 0;
 
 	double UCB(Board& s, MCTSStatus* node, MCTSStatus* parent) const;
 

@@ -4,6 +4,7 @@
 
 #include "SequentialTreeMCTSAI.hpp"
 
+using std::make_tuple;
 using namespace engine;
 
 SequentialTreeMCTSAI::SequentialTreeMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
@@ -14,7 +15,7 @@ DirId SequentialTreeMCTSAI::generateMove() {
 	TreeMCTSStatus* root = memoryManager.allocate();
 	expand(board, root);
 	while (!stopCalculations)
-		playout(board, root);
+		playout(board, root, nullptr);
 
 	TreeMCTSStatus* iter = root->getFirstChild();
 	TreeMCTSStatus* res = iter;
@@ -48,7 +49,7 @@ void SequentialTreeMCTSAI::expand(Board& s, MCTSStatus* node) {
 		son->lastMoveId = moves[id];
 }
 
-std::pair<MCTSStatus*, DirId> SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
+std::tuple<MCTSStatus*, MCTSStatus*, DirId> SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
 	TreeMCTSStatus* v = static_cast<TreeMCTSStatus*>(node);
 	TreeMCTSStatus* iter = v->getFirstChild();
 	TreeMCTSStatus* res = iter;
@@ -63,7 +64,7 @@ std::pair<MCTSStatus*, DirId> SequentialTreeMCTSAI::pickSon(Board& s, MCTSStatus
 		}
 	}
 
-	return {res, res->lastMoveId};
+	return make_tuple(res, nullptr, res->lastMoveId);
 }
 
 bool SequentialTreeMCTSAI::isLeaf(Board& s, MCTSStatus* node) {

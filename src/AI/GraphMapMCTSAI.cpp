@@ -1,5 +1,6 @@
 #include "GraphMapMCTSAI.hpp"
 
+using std::make_tuple;
 using namespace engine;
 
 GraphMapMCTSAI::GraphMapMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
@@ -16,7 +17,7 @@ void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 	}
 }
 
-std::pair<MCTSStatus*, DirId> GraphMapMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
+std::tuple<MCTSStatus*, MCTSStatus*, DirId> GraphMapMCTSAI::pickSon(Board& s, MCTSStatus* node) const {
 	auto moves = s.getMoves();
 	bool redActive = s.isRedActive();
 	double tmp, bestVal = redActive ? -engine::INF : engine::INF;
@@ -36,14 +37,14 @@ std::pair<MCTSStatus*, DirId> GraphMapMCTSAI::pickSon(Board& s, MCTSStatus* node
 		}
 	}
 
-	return {res, resMove};
+	return make_tuple(res, nullptr, resMove);
 }
 
 DirId GraphMapMCTSAI::generateMove() {
 	MCTSStatus* root = getOrCreate(board.getHash());
 	expand(board, root);
 	while (!stopCalculations)
-		playout(board, root);
+		playout(board, root, nullptr);
 
 	auto moves = board.getMoves();
 	double best = 0.0;

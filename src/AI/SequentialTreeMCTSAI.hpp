@@ -12,7 +12,7 @@ protected:
 	virtual DirId generateMove();
 	virtual void resetMemory();
 	virtual void expand(Board& s, MCTSStatus* node);
-	virtual std::pair<MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const;
+	virtual std::tuple<MCTSStatus*, MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const;
 	virtual bool isLeaf(Board& s, MCTSStatus* node);
 
 	ArrayMemoryManager<TreeMCTSStatus> memoryManager;

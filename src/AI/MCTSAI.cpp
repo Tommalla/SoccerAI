@@ -1,6 +1,7 @@
 #include <random>
 #include "MCTSAI.hpp"
 
+using std::get;
 using namespace engine;
 
 MCTSAI::MCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
@@ -19,8 +20,10 @@ void MCTSAI::undo() {
 	resetMemory();
 }
 
-bool MCTSAI::playout(Board& s, MCTSStatus* node) {
+bool MCTSAI::playout(Board& s, MCTSStatus* node, MCTSStatus* edge) {
 	node->plays++;
+	if (edge != nullptr)
+		edge->plays++;
 	bool res = false;
 
 	if (!isTimeLeft())
@@ -39,19 +42,21 @@ bool MCTSAI::playout(Board& s, MCTSStatus* node) {
 			res = advance(s, node);
 	}
 
-	if (res || stopCalculations)	//no virtual loss at the end of time
+	if (res || stopCalculations) {	//no virtual loss at the end of time
 		node->wins++;
+		if (edge != nullptr)
+			edge->wins++;
+	}
 	return res;
 }
 
 inline bool MCTSAI::advance(Board& s, MCTSStatus* node) {
 	auto son = pickSon(s, node);
-	bool change = s.play(son.second);
-	bool res = playout(s, son.first);
-	s.undo(son.second, change);
+	bool change = s.play(get<2>(son));
+	bool res = playout(s, get<0>(son), get<1>(son));
+	s.undo(get<2>(son), change);
 	return res;
 }
-
 
 bool MCTSAI::randomPlayout(Board& s) {
 	//TODO copy Board vs moves history
