@@ -42,6 +42,8 @@ void AI::undo() {
 void AI::setTimeLeft(const int time) {
 	timeLeft = time;
 	timeAvailable = timeLeft * fieldsUsed / fields / 10;
+	if (timeAvailable == 0)
+		timeAvailable = 300;	//0.3s for the beginning
 }
 
 bool AI::isTimeLeft() {
