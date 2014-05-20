@@ -21,11 +21,12 @@ protected:
 	virtual bool isLeaf(Board& s, MCTSStatus* node);
 
 private:
-	MCTSStatus* getOrCreate(const engine::Hash& hash);
+	MCTSStatus* getOrCreateNode(const engine::Hash& hash);
 	void reuseDFS(Board& s);
 
 	MapType map;
 	std::unordered_set<engine::Hash> reuseSet;
+	MapType edgeMap;
 };
 
 #endif // GRAPH_MAP_MCTSAI_HPP

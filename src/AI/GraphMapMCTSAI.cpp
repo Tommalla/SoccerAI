@@ -9,11 +9,16 @@ GraphMapMCTSAI::GraphMapMCTSAI(const Coord width, const Coord height, const doub
 void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();
 	Hash hash;
+	Hash edgeHash;
 
 	for (const auto& m: moves) {
 		hash = s.getHashAfter(m);
+		edgeHash = s.getMoveHash(m);
+
 		if (map.find(hash) == map.end())
 			map[hash] = new MCTSStatus();
+		if (edgeMap.find(edgeHash) == edgeMap.end())
+			edgeMap[edgeHash] = new MCTSStatus();
 	}
 }
 
@@ -22,26 +27,29 @@ std::tuple<MCTSStatus*, MCTSStatus*, DirId> GraphMapMCTSAI::pickSon(Board& s, MC
 	bool redActive = s.isRedActive();
 	double tmp, bestVal = redActive ? -engine::INF : engine::INF;
 	MCTSStatus* res;
+	MCTSStatus* edgeRes;
 	DirId resMove;
-	MCTSStatus* it;
-	Hash hash;
+	MCTSStatus* edgeIt;
+	Hash hash, edgeHash;
 
 	for (const auto& m: moves) {
 		hash = s.getHashAfter(m);
+		edgeHash = s.getMoveHash(m);
 
-		tmp = UCB(s, it = map.at(hash), node);
+		tmp = UCB(s, edgeIt = edgeMap.at(edgeHash), node);
 		if ((redActive ? tmp > bestVal : tmp < bestVal)) {
 			bestVal = tmp;
-			res = it;
+			res = map.at(hash);
+			edgeRes = edgeIt;
 			resMove = m;
 		}
 	}
 
-	return make_tuple(res, nullptr, resMove);
+	return make_tuple(res, edgeRes, resMove);
 }
 
 DirId GraphMapMCTSAI::generateMove() {
-	MCTSStatus* root = getOrCreate(board.getHash());
+	MCTSStatus* root = getOrCreateNode(board.getHash());
 	expand(board, root);
 	while (!stopCalculations)
 		playout(board, root, nullptr);
@@ -51,9 +59,9 @@ DirId GraphMapMCTSAI::generateMove() {
 	DirId res;
 	MCTSStatus* iter;
 	for (const auto& m: moves) {
-		iter = map.at(board.getHashAfter(m));
+		iter = edgeMap.at(board.getMoveHash(m));
 		double tmp = (double)iter->wins / iter->plays;
-		printDebug("Possible: %d -> %.3lf (%lu/%lu)\n", m, tmp, iter->wins, iter->plays);
+		printDebug("Possible (edge): %d -> %.3lf (%lu/%lu)\n", m, tmp, iter->wins, iter->plays);
 		if (tmp > best) {
 			best = tmp;
 			res = m;
@@ -69,6 +77,8 @@ void GraphMapMCTSAI::resetMemory() {
 
 	printDebug("reuseSet.size() = %lu, map.size() = %lu\n", reuseSet.size(), map.size());
 
+	//FIXME reuse edges
+
 	for (MapType::iterator iter = map.begin(), tmpIter; iter != map.end();)
 		if (reuseSet.find(iter->first) == reuseSet.end()) {
 			delete iter->second;
@@ -81,19 +91,20 @@ void GraphMapMCTSAI::resetMemory() {
 
 bool GraphMapMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();
-	Hash hash;
+	Hash hash, edgeHash;
 
 	for (const auto& m: moves) {
 		hash = s.getHashAfter(m);
+		edgeHash = s.getMoveHash(m);
 
-		if (map.find(hash) == map.end())
+		if (map.find(hash) == map.end() || edgeMap.find(edgeHash) == edgeMap.end())
 			return true;
 	}
 
 	return false;
 }
 
-MCTSStatus* GraphMapMCTSAI::getOrCreate(const engine::Hash& hash) {
+MCTSStatus* GraphMapMCTSAI::getOrCreateNode(const engine::Hash& hash) {
 	if (map.find(hash) != map.end())
 		return map.at(hash);
 	return (map[hash] = new MCTSStatus());
