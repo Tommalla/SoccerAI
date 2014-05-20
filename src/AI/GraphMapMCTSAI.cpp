@@ -51,8 +51,11 @@ std::tuple<MCTSStatus*, MCTSStatus*, DirId> GraphMapMCTSAI::pickSon(Board& s, MC
 DirId GraphMapMCTSAI::generateMove() {
 	MCTSStatus* root = getOrCreateNode(board.getHash());
 	expand(board, root);
-	while (!stopCalculations)
+	int qty = 0;
+	while (!stopCalculations) {
 		playout(board, root, nullptr);
+		++qty;
+	}
 
 	auto moves = board.getMoves();
 	double best = 0.0;
@@ -67,6 +70,8 @@ DirId GraphMapMCTSAI::generateMove() {
 			res = m;
 		}
 	}
+
+	printDebug("Ran %d plays\n", qty);
 
 	return res;
 }
