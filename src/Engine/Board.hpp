@@ -53,6 +53,11 @@ public:
 	 */
 	engine::Hash getHashAfter(const DirId& moveId) const;
 	/**
+	 * @brief Returns a [supposedly] unique hash for transition from the
+	 * current state of the board using move moveId.
+	 */
+	engine::Hash getMoveHash(const DirId& moveId) const;
+	/**
 	 * @brief True if the active player is Red. False otherwise.
 	 * Invariant: either Blue or Red player is active.
 	 */
@@ -124,6 +129,7 @@ private:
 	uint8_t* edges;
 	engine::Hash* hash;
 	engine::Hash playerRedHash;
+	engine::Hash* moveHash;
 	engine::Hash currentHash;
 	engine::Field position;
 	const engine::Coord width, height;

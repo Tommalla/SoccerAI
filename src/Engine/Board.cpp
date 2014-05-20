@@ -24,6 +24,9 @@ Board::Board(Coord width, Coord height)
 	for (size_t i = 0; i < width * height * directions.size(); ++i)
 		hash[i] = engine::deterministicRandom();
 	playerRedHash = engine::deterministicRandom();
+	moveHash = new Hash[directions.size()];
+	for (size_t i = 0; i < directions.size(); ++i)
+		moveHash[i] = engine::deterministicRandom();
 
 	//prepare board
 	edges = new uint8_t[width * height];
@@ -63,6 +66,7 @@ Board::Board(const Board& other)
 , edges{new uint8_t[other.width * other.height]}
 , hash{new uint_fast64_t[other.width * other.height * other.directions.size()]}
 , playerRedHash{other.playerRedHash}
+, moveHash{new uint_fast64_t[other.directions.size()]}
 , currentHash{other.currentHash}
 , position{other.position}
 , width{other.width}
@@ -74,11 +78,14 @@ Board::Board(const Board& other)
 		edges[i] = other.edges[i];
 	for (size_t i = 0; i < width * height * other.directions.size(); ++i)
 		hash[i] = other.hash[i];
+	for (size_t i = 0; i < directions.size(); ++i)
+		moveHash[i] = other.moveHash[i];
 }
 
 Board::~Board() {
 	delete[] edges;
 	delete[] hash;
+	delete[] moveHash;
 }
 
 bool Board::play(const DirId moveId) {
@@ -154,6 +161,9 @@ Hash Board::getHashAfter(const DirId& moveId) const {
 	return res;
 }
 
+Hash Board::getMoveHash(const DirId& moveId) const {
+	return currentHash ^ moveHash[moveId];
+}
 
 bool Board::isRedActive() const {
 	return playerRed;
