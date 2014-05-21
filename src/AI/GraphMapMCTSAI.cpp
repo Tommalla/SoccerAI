@@ -4,7 +4,8 @@ using std::make_tuple;
 using namespace engine;
 
 GraphMapMCTSAI::GraphMapMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
-: MCTSAI{width, height, c, expandBorder, memorySize} {}
+: MCTSAI{width, height, c, expandBorder, memorySize}
+, statsMemory{memorySize} {}
 
 void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 	auto moves = s.getMoves();
@@ -16,9 +17,9 @@ void GraphMapMCTSAI::expand(Board& s, MCTSStatus* node) {
 		edgeHash = s.getMoveHash(m);
 
 		if (map.find(hash) == map.end())
-			map[hash] = new MCTSStatus();
+			map[hash] = statsMemory.allocate();
 		if (edgeMap.find(edgeHash) == edgeMap.end())
-			edgeMap[edgeHash] = new MCTSStatus();
+			edgeMap[edgeHash] = statsMemory.allocate();
 	}
 }
 
@@ -107,7 +108,7 @@ bool GraphMapMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
 MCTSStatus* GraphMapMCTSAI::getOrCreateNode(const engine::Hash& hash) {
 	if (map.find(hash) != map.end())
 		return map.at(hash);
-	return (map[hash] = new MCTSStatus());
+	return (map[hash] = statsMemory.allocate());
 }
 
 void GraphMapMCTSAI::reuseDFS(Board& s) {
@@ -149,14 +150,10 @@ void GraphMapMCTSAI::reuseEdgeDFS(Board& s) {
 void GraphMapMCTSAI::removeUnusedValues(GraphMapMCTSAI::MapType& from, const std::unordered_set< Hash >& omit) {
 	for (MapType::iterator iter = from.begin(), tmpIter; iter != from.end();)
 		if (omit.find(iter->first) == omit.end()) {
-			delete iter->second;
+			statsMemory.deallocate(iter->second);
 			tmpIter = iter;
 			++iter;
 			from.erase(tmpIter);
 		} else
 			++iter;
 }
-
-
-
-

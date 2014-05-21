@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 #include "MCTSAI.hpp"
+#include "PseudoDynamicArrayMemoryManager.hpp"
 
 class GraphMapMCTSAI: public MCTSAI {
 	typedef std::unordered_map<engine::Hash, MCTSStatus*> MapType;
@@ -30,6 +31,7 @@ private:
 	std::unordered_set<engine::Hash> reuseSet;
 	std::unordered_set<engine::Hash> reuseEdgeSet;
 	MapType edgeMap;
+	PseudoDynamicArrayMemoryManager<MCTSStatus> statsMemory;
 };
 
 #endif // GRAPH_MAP_MCTSAI_HPP
