@@ -15,6 +15,7 @@ set(HEADERS
 	GraphAlphaBetaAI.hpp
 	GraphMapMCTSAI.hpp
 	PseudoDynamicArrayMemoryManager.hpp
+	GraphMCTSAI.hpp
 )
 
 set(SOURCES
@@ -30,6 +31,7 @@ set(SOURCES
 	TreeAlphaBetaAI.cpp
 	GraphAlphaBetaAI.cpp
 	GraphMapMCTSAI.cpp
+	GraphMCTSAI.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})
