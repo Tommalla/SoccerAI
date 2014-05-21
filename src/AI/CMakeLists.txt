@@ -14,6 +14,7 @@ set(HEADERS
 	TreeAlphaBetaAI.hpp
 	GraphAlphaBetaAI.hpp
 	GraphMapMCTSAI.hpp
+	PseudoDynamicArrayMemoryManager.hpp
 )
 
 set(SOURCES

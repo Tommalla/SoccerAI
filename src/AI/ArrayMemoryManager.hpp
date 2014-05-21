@@ -4,6 +4,7 @@
 
 template<class Status>
 class ArrayMemoryManager : public MemoryManager<Status> {
+protected:
 	using MemoryManager<Status>::end;
 	using MemoryManager<Status>::size;
 	using MemoryManager<Status>::memory;

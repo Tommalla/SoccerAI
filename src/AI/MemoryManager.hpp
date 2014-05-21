@@ -12,7 +12,7 @@ public:
 	MemoryManager(MemoryManager&& other) = delete;
 	MemoryManager& operator=(const MemoryManager& other) = delete;
 	MemoryManager&& operator=(MemoryManager&& other) = delete;
-	~MemoryManager();
+	virtual ~MemoryManager();
 
 protected:
 	size_t end;
