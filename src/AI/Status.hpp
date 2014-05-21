@@ -4,35 +4,28 @@
 #include "../Engine/engine.hpp"
 #include "../Engine/Board.hpp"
 
-class StatusTemplate {
-public:
-	virtual void reset() = 0;
-	virtual ~StatusTemplate() {};
-};
-
-class GraphStatus : public StatusTemplate {
+class GraphStatus {
 public:
 	GraphStatus();
 	engine::Hash hash;
-	virtual void reset();
 };
 
 
-class MCTSStatus : public StatusTemplate {
+class MCTSStatus {
 public:
 	MCTSStatus();
-	virtual void reset();
 
 	uint32_t wins, plays;
 };
 
 class TreeMCTSStatus : public MCTSStatus {
+	template<class Status>
+	friend void resetStatus(Status* stat);
 public:
 	TreeMCTSStatus();
 	TreeMCTSStatus* getFirstChild() const;
 	size_t getNumChildren() const;
 	void setChildren(TreeMCTSStatus* firstChild, const size_t& numChildren);
-	virtual void reset();
 
 	DirId lastMoveId;
 
@@ -50,7 +43,6 @@ public:
 	};
 
 	AlphaBetaStatus();
-	virtual void reset();
 
 	int result;
 	unsigned int depth;
@@ -58,5 +50,31 @@ public:
 };
 
 
+template<class Status>
+inline void resetStatus(Status* stat);
+
+template<>
+inline void resetStatus<GraphStatus>(GraphStatus* stat) {
+	stat->hash = 0;
+}
+
+template<>
+inline void resetStatus<MCTSStatus>(MCTSStatus* stat) {
+	stat->plays = stat->wins = 0;
+}
+
+template<>
+inline void resetStatus<TreeMCTSStatus>(TreeMCTSStatus* stat) {
+	resetStatus<MCTSStatus>(stat);
+	stat->lastMoveId = -1;
+	stat->firstChild = nullptr;
+	stat->numChildren = 0;
+}
+
+template<>
+inline void resetStatus<AlphaBetaStatus>(AlphaBetaStatus* stat) {
+	resetStatus<GraphStatus>(stat);
+	stat->result = 0;
+}
 
 #endif // STATUS_HPP

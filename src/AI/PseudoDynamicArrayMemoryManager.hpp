@@ -46,7 +46,7 @@ template<class Status>
 Status* PseudoDynamicArrayMemoryManager<Status>::allocate() {
 	assert(availEnd >= 0);
 	Status* res = available[availEnd--];
-	res->reset();
+	resetStatus<Status>(res);
 	return res;
 }
 

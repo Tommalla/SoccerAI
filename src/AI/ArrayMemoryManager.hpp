@@ -23,7 +23,7 @@ bool ArrayMemoryManager<Status>::addChildren(Status* node, const size_t& num) {
 		return false;
 	node->setChildren(allocate(), num);
 	for (size_t i = 0; i < num; ++i)
-		(memory + end - 1 + i)->reset();
+		resetStatus<Status>(memory + end - 1 + i);
 	end += num - 1;
 	return true;
 }

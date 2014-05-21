@@ -43,7 +43,7 @@ std::pair<bool, Status*> TranspositionTable<Status>::getOrCreate(const engine::H
 		}
 
 	++misses;
-	candidate->reset();
+	resetStatus<Status>(candidate);
 	candidate->hash = hash;
 	return {false, candidate};
 }
