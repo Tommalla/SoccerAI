@@ -65,6 +65,16 @@ DirId GraphMCTSAI::generateMove() {
 	return res;
 }
 
+bool GraphMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
+	auto moves = s.getMoves();
+
+	for (const auto& m: moves)
+		if (!isNodeCreated(s.getHashAfter(m)) || !isEdgeCreated(s.getMoveHash(m)))
+			return true;
+
+		return false;
+}
+
 std::pair<MCTSStatus*, bool> GraphMCTSAI::getOrCreateNode(const Hash& hash) {
 	bool res = assertNodeCreated(hash);
 	return {getNode(hash), res};

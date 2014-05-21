@@ -20,16 +20,6 @@ void GraphMapMCTSAI::resetMemory() {
 	removeUnusedValues(edgeMap, reuseEdgeSet);
 }
 
-bool GraphMapMCTSAI::isLeaf(Board& s, MCTSStatus* node) {
-	auto moves = s.getMoves();
-
-	for (const auto& m: moves)
-		if (!isInMap(nodeMap, s.getHashAfter(m)) || !isInMap(edgeMap, s.getMoveHash(m)))
-			return true;
-
-	return false;
-}
-
 bool GraphMapMCTSAI::assertNodeCreated(const Hash& hash) {
 	return assertCreated(nodeMap, hash);
 }
@@ -44,6 +34,14 @@ MCTSStatus* GraphMapMCTSAI::getNode(const Hash& hash) const {
 
 MCTSStatus* GraphMapMCTSAI::getEdge(const Hash& hash) const {
 	return edgeMap.at(hash);
+}
+
+bool GraphMapMCTSAI::isNodeCreated(const Hash& hash) const {
+	return isInMap(nodeMap, hash);
+}
+
+bool GraphMapMCTSAI::isEdgeCreated(const Hash& hash) const {
+	return isInMap(edgeMap, hash);
 }
 
 bool GraphMapMCTSAI::assertCreated(GraphMapMCTSAI::MapType& map, const Hash& hash) {

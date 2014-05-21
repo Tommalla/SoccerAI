@@ -14,11 +14,12 @@ public:
 
 protected:
 	virtual void resetMemory();
-	virtual bool isLeaf(Board& s, MCTSStatus* node);
 	virtual bool assertNodeCreated(const engine::Hash& hash);
 	virtual bool assertEdgeCreated(const engine::Hash& hash);
 	virtual MCTSStatus* getNode(const engine::Hash& hash) const;
 	virtual MCTSStatus* getEdge(const engine::Hash& hash) const;
+	virtual bool isNodeCreated(const engine::Hash& hash) const ;
+	virtual bool isEdgeCreated(const engine::Hash& hash) const;
 
 private:
 	bool assertCreated(MapType& map, const engine::Hash& hash);

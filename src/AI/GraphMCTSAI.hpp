@@ -16,7 +16,7 @@ protected:
 	virtual std::tuple<MCTSStatus*, MCTSStatus*, DirId> pickSon(Board& s, MCTSStatus* node) const;
 	virtual DirId generateMove();
 	virtual void resetMemory() = 0;
-	virtual bool isLeaf(Board& s, MCTSStatus* node) = 0;
+	virtual bool isLeaf(Board& s, MCTSStatus* node);
 	/**
 	 * @brief Returns a pair: pointer to the MCTSStatus object representing the node with hash `hash` in MCTS tree
 	 * and the boolean value: true if the object was present in the underlying storage, false if it had to be created.
@@ -55,6 +55,8 @@ protected:
 	 * @return true if the edge was already present, false otherwise.
 	 */
 	virtual bool assertEdgeCreated(const engine::Hash& hash) = 0;
+	virtual bool isNodeCreated(const engine::Hash& hash) const = 0;
+	virtual bool isEdgeCreated(const engine::Hash& hash) const = 0;
 };
 
 #endif // GRAPH_MCTSAI_HPP
