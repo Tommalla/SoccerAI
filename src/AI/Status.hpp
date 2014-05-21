@@ -4,12 +4,16 @@
 #include "../Engine/engine.hpp"
 #include "../Engine/Board.hpp"
 
+template<class Status>
+inline void resetStatus(Status* stat) {
+	static_assert(sizeof(Status) == 0, "No specialization for this type of argument!");
+}
+
 class GraphStatus {
 public:
 	GraphStatus();
 	engine::Hash hash;
 };
-
 
 class MCTSStatus {
 public:
@@ -18,9 +22,13 @@ public:
 	uint32_t wins, plays;
 };
 
+class GraphMCTSStatus: public GraphStatus, public MCTSStatus {
+public:
+	GraphMCTSStatus();
+};
+
 class TreeMCTSStatus : public MCTSStatus {
-	template<class Status>
-	friend void resetStatus(Status* stat);
+	friend void resetStatus<TreeMCTSStatus>(TreeMCTSStatus* stat);
 public:
 	TreeMCTSStatus();
 	TreeMCTSStatus* getFirstChild() const;
@@ -50,9 +58,6 @@ public:
 };
 
 
-template<class Status>
-inline void resetStatus(Status* stat);
-
 template<>
 inline void resetStatus<GraphStatus>(GraphStatus* stat) {
 	stat->hash = 0;
@@ -61,6 +66,12 @@ inline void resetStatus<GraphStatus>(GraphStatus* stat) {
 template<>
 inline void resetStatus<MCTSStatus>(MCTSStatus* stat) {
 	stat->plays = stat->wins = 0;
+}
+
+template<>
+inline void resetStatus<GraphMCTSStatus>(GraphMCTSStatus* stat) {
+	resetStatus<GraphStatus>(stat);
+	resetStatus<MCTSStatus>(stat);
 }
 
 template<>

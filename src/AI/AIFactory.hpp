@@ -17,6 +17,7 @@ namespace AIFactory {
 		GRAPH_ALPHA_BETA,
 		MCTS_SEQUENTIAL_TREE,
 		MCTS_GRAPH_MAP,
+		MCTS_GRAPH_TT,
 		WRONG
 	};
 

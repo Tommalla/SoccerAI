@@ -9,7 +9,7 @@ target_link_libraries(mctsEvolve Engine AI)
 
 add_executable(SoccerAI main.cpp)
 set_target_properties(SoccerAI PROPERTIES
-	COMPILE_FLAGS "${FINAL_FLAGS} -DGRAPH_MAP_MCTS_AI")
+	COMPILE_FLAGS "${FINAL_FLAGS} -DGRAPH_TRANSPOSITION_TABLE_MCTS_AI")
 target_link_libraries(SoccerAI Engine AI)
 
 add_executable(AlphaBeta main.cpp)

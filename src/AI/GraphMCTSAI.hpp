@@ -22,13 +22,13 @@ protected:
 	 * and the boolean value: true if the object was present in the underlying storage, false if it had to be created.
 	 * Requires getNode and assertNodeCreated to be implemented.
 	 */
-	std::pair<MCTSStatus*, bool> getOrCreateNode(const engine::Hash& hash);
+	virtual std::pair<MCTSStatus*, bool> getOrCreateNode(const engine::Hash& hash);
 	/**
 	 * @brief Returns a pair: pointer to the MCTSStatus object representing the edge with hash `hash` in MCTS tree
 	 * and the boolean value: true if the object was present in the underlying storage, false if it had to be created.
 	 * Requires getNode and assertNodeCreated to be implemented.
 	 */
-	std::pair<MCTSStatus*, bool> getOrCreateEdge(const engine::Hash& hash);
+	virtual std::pair<MCTSStatus*, bool> getOrCreateEdge(const engine::Hash& hash);
 	/**
 	 * @brief Returns a pointer to the MCTSStatus object representing the node with hash `hash` in MCTS tree.
 	 * Assumes that assertNodeCreated was run sometime prior to its' invocation. A logical assumption is that

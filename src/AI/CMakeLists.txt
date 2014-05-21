@@ -16,6 +16,7 @@ set(HEADERS
 	GraphMapMCTSAI.hpp
 	PseudoDynamicArrayMemoryManager.hpp
 	GraphMCTSAI.hpp
+	GraphTranspositionTableMCTSAI.hpp
 )
 
 set(SOURCES
@@ -32,6 +33,7 @@ set(SOURCES
 	GraphAlphaBetaAI.cpp
 	GraphMapMCTSAI.cpp
 	GraphMCTSAI.cpp
+	GraphTranspositionTableMCTSAI.cpp
 )
 
 add_library(AI ${HEADERS} ${SOURCES})

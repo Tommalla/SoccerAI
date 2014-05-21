@@ -5,6 +5,7 @@
 #include "GraphAlphaBetaAI.hpp"
 #include "SequentialTreeMCTSAI.hpp"
 #include "GraphMapMCTSAI.hpp"
+#include "GraphTranspositionTableMCTSAI.hpp"
 #include "RandomAI.hpp"
 #include "objectiveFunctions.hpp"
 
@@ -16,19 +17,22 @@ shared_ptr<AI> AIFactory::create(const AIType& type, const Coord width, const Co
 
 	switch (type) {
 		case AIType::RANDOM:
-			res = shared_ptr<AI>(new RandomAI(width, height));
+			res = shared_ptr<AI>(new RandomAI{width, height});
 			break;
 		case AIType::TREE_ALPHA_BETA:
-			res = shared_ptr<AI>(new TreeAlphaBetaAI(width, height, objectiveFunctions::simpleDistance));
+			res = shared_ptr<AI>(new TreeAlphaBetaAI{width, height, objectiveFunctions::simpleDistance});
 			break;
 		case AIType::GRAPH_ALPHA_BETA:
-			res = shared_ptr<AI>(new GraphAlphaBetaAI(width, height, objectiveFunctions::simpleDistance, defaultMemorySize));
+			res = shared_ptr<AI>(new GraphAlphaBetaAI{width, height, objectiveFunctions::simpleDistance, defaultMemorySize});
 			break;
 		case AIType::MCTS_SEQUENTIAL_TREE:
-			res = shared_ptr<AI>(new SequentialTreeMCTSAI(width, height, 1.0, 30, defaultMemorySize));
+			res = shared_ptr<AI>(new SequentialTreeMCTSAI{width, height, 1.0, 30, defaultMemorySize});
 			break;
 		case AIType::MCTS_GRAPH_MAP:
-			res = shared_ptr<AI>(new GraphMapMCTSAI(width, height, 1.0, 30, defaultMemorySize));
+			res = shared_ptr<AI>(new GraphMapMCTSAI{width, height, 1.0, 30, defaultMemorySize});
+			break;
+		case AIType::MCTS_GRAPH_TT:
+			res = shared_ptr<AI>(new GraphTranspositionTableMCTSAI{width, height, 1.0, 30, defaultMemorySize});
 			break;
 		default:
 			throw WrongAITypeException();
@@ -46,14 +50,17 @@ AIFactory::AIType AIFactory::stringToType(std::string str) {
 	if (str[0] == 't' || str == "treealphabeta")
 		return AIType::TREE_ALPHA_BETA;
 
-	if (str[0] == 'g' || str == "graphalphabeta")
+	if (str == "gab" || str == "graphalphabeta")
 		return AIType::GRAPH_ALPHA_BETA;
 
 	if (str[0] == 's' || str == "sequentialtreemcts")
 		return AIType::MCTS_SEQUENTIAL_TREE;
 
-	if (str[0] == 'm' || str == "graphmapmcts")
+	if (str == "gmm" || str == "gmapmcts" || str == "graphmapmcts")
 		return AIType::MCTS_GRAPH_MAP;
+
+	if (str == "gttm" || str == "gttmcts" || str == "graphtranspositiontablemcts" || str == "graphttmcts")
+		return AIType::MCTS_GRAPH_TT;
 
 	return AIType::WRONG;
 }

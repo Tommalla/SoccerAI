@@ -7,6 +7,10 @@ MCTSStatus::MCTSStatus()
 : wins{0}
 , plays{0} {}
 
+GraphMCTSStatus::GraphMCTSStatus()
+: GraphStatus{}
+, MCTSStatus{} {}
+
 TreeMCTSStatus::TreeMCTSStatus()
 : MCTSStatus{}
 , lastMoveId{-1}

@@ -66,6 +66,9 @@ int main() {
 	#ifdef GRAPH_MAP_MCTS_AI
 	ai = AIFactory::create(AIFactory::AIType::MCTS_GRAPH_MAP, w, h);
 	#endif
+	#ifdef GRAPH_TRANSPOSITION_TABLE_MCTS_AI
+	ai = AIFactory::create(AIFactory::AIType::MCTS_GRAPH_TT, w, h);
+	#endif
 
 	while (getline(cin, line)) {
 		stringstream ss(line);
