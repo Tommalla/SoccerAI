@@ -9,10 +9,18 @@ class TranspositionTable : public MemoryManager<Status> {
 	using MemoryManager<Status>::size;
 	using MemoryManager<Status>::memory;
 	typedef std::function<double(Status*)> ValueFunction;
+
 public:
+	class NoSuchElement : public std::exception {
+		const char * what () noexcept {
+			return "Element not found in TT.";
+		}
+	};
+
 	TranspositionTable(const size_t& size, const ValueFunction& stateValue);
 	std::pair< bool, Status* > getOrCreate(const engine::Hash& hash);
 	bool exists(const engine::Hash& hash) const;
+	Status* get(const engine::Hash& hash) const;
 
 	int misses;
 	int hits;
@@ -62,5 +70,18 @@ bool TranspositionTable<Status>::exists(const engine::Hash& hash) const {
 
 	return false;
 }
+
+template<class Status>
+Status* TranspositionTable<Status>::get(const engine::Hash& hash) const {
+	size_t id = hash % size;
+	size_t searchEnd = std::min(id + 4, size);
+
+	for (size_t i = id; i < searchEnd; ++i)
+		if (memory[i].hash == hash)
+			return memory + i;
+
+	throw NoSuchElement{};
+}
+
 
 #endif // TRANSPOSITION_TABLE_HPP
