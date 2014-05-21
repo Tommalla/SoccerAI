@@ -1,63 +1,66 @@
 #include "GraphTranspositionTableMCTSAI.hpp"
 
-GraphTranspositionTableMCTSAI::GraphTranspositionTableMCTSAI(const engine::Coord width, const engine::Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
+using std::pair;
+using namespace engine;
+
+bool isWorse(GraphMCTSStatus* s1, GraphMCTSStatus* s2) {
+	if (s1->value != s2->value)
+		return s1->value < s2->value;
+	if (s1->plays * s2->plays == 0)
+		return s1->plays < s2->plays;
+	return (double)s1->wins / s1->plays < (double)s2->wins / s2->plays;
+}
+
+GraphTranspositionTableMCTSAI::GraphTranspositionTableMCTSAI(const Coord width, const Coord height, const double& c, const size_t& expandBorder, const size_t& memorySize)
 : GraphMCTSAI{width, height, c, expandBorder, memorySize}
-, nodesTT{memorySize / 2, [](GraphMCTSStatus* s){return (s->plays == 0) ? 0.0 : (double)(s->wins) / s->plays;}}
-, edgesTT{memorySize / 2, [](GraphMCTSStatus* s){return (s->plays == 0) ? 0.0 : (double)(s->wins) / s->plays;}} {}
+, nodesTT{memorySize / 2, isWorse}
+, edgesTT{memorySize / 2, isWorse} {}
 
 void GraphTranspositionTableMCTSAI::resetMemory() {
-	//FIXME Reuse Subgraph in the future, nothing for now
+	reuseDFS<true>(board);
+	reuseDFS<false>(board);
 }
 
 DirId GraphTranspositionTableMCTSAI::generateMove() {
 	nodesTT.hits = nodesTT.misses = edgesTT.hits = edgesTT.misses = 0;
 	auto res = GraphMCTSAI::generateMove();
-	engine::printDebug("misses: %d/%d, %d/%d\n", nodesTT.misses, nodesTT.hits, edgesTT.misses, edgesTT.hits);
+	printDebug("misses: %d/%d, %d/%d\n", nodesTT.misses, nodesTT.hits, edgesTT.misses, edgesTT.hits);
 	return res;
 }
 
-std::pair<MCTSStatus*, bool> GraphTranspositionTableMCTSAI::getOrCreateNode(const engine::Hash& hash) {
+pair<MCTSStatus*, bool> GraphTranspositionTableMCTSAI::getOrCreateNode(const Hash& hash) {
 	return getOrCreate(nodesTT, hash);
 }
 
-std::pair<MCTSStatus*, bool> GraphTranspositionTableMCTSAI::getOrCreateEdge(const engine::Hash& hash) {
+pair<MCTSStatus*, bool> GraphTranspositionTableMCTSAI::getOrCreateEdge(const Hash& hash) {
 	return getOrCreate(edgesTT, hash);
 }
 
-bool GraphTranspositionTableMCTSAI::assertNodeCreated(const engine::Hash& hash) {
+bool GraphTranspositionTableMCTSAI::assertNodeCreated(const Hash& hash) {
 	return nodesTT.getOrCreate(hash).second;
 }
 
-bool GraphTranspositionTableMCTSAI::assertEdgeCreated(const engine::Hash& hash) {
+bool GraphTranspositionTableMCTSAI::assertEdgeCreated(const Hash& hash) {
 	return edgesTT.getOrCreate(hash).second;
 }
 
-MCTSStatus* GraphTranspositionTableMCTSAI::getNode(const engine::Hash& hash) const {
+MCTSStatus* GraphTranspositionTableMCTSAI::getNode(const Hash& hash) const {
 	return nodesTT.get(hash);
 }
 
-MCTSStatus* GraphTranspositionTableMCTSAI::getEdge(const engine::Hash& hash) const {
+MCTSStatus* GraphTranspositionTableMCTSAI::getEdge(const Hash& hash) const {
 	return edgesTT.get(hash);
 }
 
-bool GraphTranspositionTableMCTSAI::isNodeCreated(const engine::Hash& hash) const {
+bool GraphTranspositionTableMCTSAI::isNodeCreated(const Hash& hash) const {
 	return nodesTT.exists(hash);
 }
 
-bool GraphTranspositionTableMCTSAI::isEdgeCreated(const engine::Hash& hash) const {
+bool GraphTranspositionTableMCTSAI::isEdgeCreated(const Hash& hash) const {
 	return edgesTT.exists(hash);
 }
 
-std::pair< MCTSStatus*, bool > GraphTranspositionTableMCTSAI::getOrCreate(GraphTranspositionTableMCTSAI::TTType& tt, const engine::Hash& hash) {
+pair<MCTSStatus*, bool> GraphTranspositionTableMCTSAI::getOrCreate(GraphTranspositionTableMCTSAI::TTType& tt, const Hash& hash) {
 	auto res = tt.getOrCreate(hash);
 	return {res.second, res.first};
 }
-
-
-
-
-
-
-
-
-

@@ -25,6 +25,8 @@ public:
 class GraphMCTSStatus: public GraphStatus, public MCTSStatus {
 public:
 	GraphMCTSStatus();
+
+	uint8_t value;
 };
 
 class TreeMCTSStatus : public MCTSStatus {
@@ -72,6 +74,7 @@ template<>
 inline void resetStatus<GraphMCTSStatus>(GraphMCTSStatus* stat) {
 	resetStatus<GraphStatus>(stat);
 	resetStatus<MCTSStatus>(stat);
+	stat->value = 0;
 }
 
 template<>

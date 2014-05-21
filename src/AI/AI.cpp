@@ -58,3 +58,10 @@ bool AI::isTimeLeft() {
 	return true;
 }
 
+int AI::getFieldsUsed() const {
+	return fieldsUsed;
+}
+
+int AI::getFields() const {
+	return fields;
+}

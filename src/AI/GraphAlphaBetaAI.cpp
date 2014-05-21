@@ -3,7 +3,7 @@
 GraphAlphaBetaAI::GraphAlphaBetaAI(const engine::Coord width, const engine::Coord height,
 				   const std::function<int(const Board&)>& value, const size_t& memorySize)
 : AlphaBetaAI{width, height, value}
-, tt{memorySize, [](AlphaBetaStatus* s){return 1.0;}} {}
+, tt{memorySize, [](AlphaBetaStatus* s1, AlphaBetaStatus* s2){return true;}} {}
 
 std::pair< bool, AlphaBetaStatus > GraphAlphaBetaAI::getNode(const engine::Hash& hash) {
 	auto res = tt.getOrCreate(hash);

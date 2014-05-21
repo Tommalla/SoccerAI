@@ -22,9 +22,34 @@ protected:
 
 private:
 	std::pair<MCTSStatus*, bool> getOrCreate(TTType& tt, const engine::Hash& hash);
+	template<bool Node>
+	void reuseDFS(Board& s);
 
 	TTType nodesTT;
 	TTType edgesTT;
 };
+
+template<bool Node>
+void GraphTranspositionTableMCTSAI::reuseDFS(Board& s) {
+	auto moves = s.getMoves();
+	int currentValue = getFieldsUsed();
+	bool change;
+	engine::Hash hash;
+	GraphMCTSStatus* iter;
+
+	for (const auto& m: moves) {
+		hash = Node ? s.getHashAfter(m) : s.getMoveHash(m);
+
+		if ((Node ? isNodeCreated(hash) : isEdgeCreated(hash)) && (iter = (Node ? nodesTT.get(hash) : edgesTT.get(hash)))->value < currentValue) {
+			change = s.play(m);
+
+			iter->value = currentValue;
+			reuseDFS<Node>(s);
+
+			s.undo(m, change);
+		}
+	}
+}
+
 
 #endif // GRAPH_TRANSPOSITION_TABLE_MCTS_AI_HPP

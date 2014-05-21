@@ -8,7 +8,7 @@ class TranspositionTable : public MemoryManager<Status> {
 	using MemoryManager<Status>::end;
 	using MemoryManager<Status>::size;
 	using MemoryManager<Status>::memory;
-	typedef std::function<double(Status*)> ValueFunction;
+	typedef std::function<bool(Status*, Status*)> CompareFunction;
 
 public:
 	class NoSuchElement : public std::exception {
@@ -17,7 +17,7 @@ public:
 		}
 	};
 
-	TranspositionTable(const size_t& size, const ValueFunction& stateValue);
+	TranspositionTable(const size_t& size, const CompareFunction& isWorse);
 	std::pair< bool, Status* > getOrCreate(const engine::Hash& hash);
 	bool exists(const engine::Hash& hash) const;
 	Status* get(const engine::Hash& hash) const;
@@ -26,13 +26,13 @@ public:
 	int hits;
 
 private:
-	ValueFunction stateValue;
+	CompareFunction isWorse;
 };
 
 template<class Status>
-TranspositionTable<Status>::TranspositionTable(const size_t& size, const ValueFunction& stateValue)
+TranspositionTable<Status>::TranspositionTable(const size_t& size, const CompareFunction& isWorse)
 : MemoryManager<Status>{size}
-, stateValue{stateValue} {misses = hits = 0;}
+, isWorse {isWorse} {misses = hits = 0;}
 
 
 template<class Status>
@@ -40,18 +40,14 @@ std::pair<bool, Status*> TranspositionTable<Status>::getOrCreate(const engine::H
 	size_t id = hash % size;
 	size_t searchEnd = std::min(id + 4, size);
 	Status* candidate = nullptr;
-	double worstVal = engine::INF;
-	double tmp;
 
 	++hits;
 
 	for (size_t i = id; i < searchEnd; ++i)
 		if (memory[i].hash == hash)
 			return {true, &(memory[i])};
-		else if ((tmp = stateValue(memory + i)) < worstVal) {
-			worstVal = tmp;
+		else if (candidate == nullptr || isWorse(memory + i, candidate))
 			candidate = memory + i;
-		}
 
 	++misses;
 	resetStatus<Status>(candidate);

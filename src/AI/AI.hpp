@@ -31,6 +31,8 @@ public:
 protected:
 	virtual DirId generateMove() = 0;
 	bool isTimeLeft();
+	int getFieldsUsed() const;
+	int getFields() const;
 
 	std::stack<std::pair<DirId, bool>> history;
 	Board board;
