@@ -22,6 +22,24 @@ void AI::play(const DirId& move) {
 }
 
 DirId AI::genMove() {
+	//don't run the algorithm if the win is obvious
+	if (board.canWinInOneMove()) {
+		auto moves = board.getMoves();
+		bool change;
+		size_t i;
+
+		for (i = 0; i < moves.size(); ++i) {
+			change = board.play(moves[i]);
+			if (board.isGameFinished() && board.doesRedWin())
+				break;
+			board.undo(moves[i], change);
+		}
+
+		board.undo(moves[i], change);
+		return moves[i];
+	}
+
+	//run the algorithm
 	alreadyMoved = true;
 	beginTime = getTime();
 	operationsCounter = 0;
