@@ -24,7 +24,7 @@ namespace AIFactory {
 	std::shared_ptr<AI> create(const AIFactory::AIType& type, const engine::Coord width, const engine::Coord height);
 	AIType stringToType(std::string str);
 
-	const int defaultMemorySize = 10000000;
+	const int defaultMemorySize = 50000000;
 };
 
 #endif // AIFACTORY_HPP
