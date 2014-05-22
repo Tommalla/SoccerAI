@@ -86,6 +86,10 @@ public:
 	 * @brief Returns the current hash of Board.
 	 */
 	engine::Hash getHash() const;
+	/**
+	 * @brief Returns true if the current player can win in one move.
+	 */
+	bool canWinInOneMove() const;
 
 	const std::vector<engine::Move> directions;
 	const static DirId LEFT_UP = 0;

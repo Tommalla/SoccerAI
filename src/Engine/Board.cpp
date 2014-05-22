@@ -202,6 +202,12 @@ Hash Board::getHash() const {
 	return currentHash;
 }
 
+bool Board::canWinInOneMove() const {
+	if (playerRed)
+		return position >= 2 * width + width / 2 - 1 && position <= 2 * width + width / 2 + 1;
+	return position >= (height - 2) * width - 2 - width / 2 && position <= (height - 2) * width - width / 2;
+}
+
 DirId Board::getDirectionBetween(const Field a, const Field b) const {
 	assert(isValid(a));
 	assert(isValid(b));

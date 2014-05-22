@@ -11,13 +11,32 @@
 using namespace engine;
 using namespace std;
 
-void testGoalPost(const DirId postDir, const DirId lastMove, bool redWins) {
+void testGoalPost(const DirId postDir, int qty, const DirId lastMove, bool redWins, bool gameFinished, bool canWinInOneMove) {
 	Board b(8, 12);
-	for (int i = 0; i < 5; ++i)
+	bool red = b.isRedActive();
+	assert(b.isRedActive());
+	while (qty--) {
 		b.play(postDir);
+		assert(b.isRedActive() == (red = !red));
+	}
 	b.play(lastMove);
-	assert(b.isGameFinished());
+	assert(b.isGameFinished() == gameFinished);
+	assert(b.canWinInOneMove() == canWinInOneMove);
 	assert(b.doesRedWin() == redWins);
+}
+
+void testCanWinInOneMove(const bool up) {
+	Board b{8, 12};
+	for (int i = 0; i < 4; ++i)
+		b.play(up ? Board::UP : Board::DOWN);
+	b.play(Board::LEFT);
+	DirId m = up ? Board::RIGHT_UP : Board::RIGHT_DOWN;
+	b.play(m);
+	assert(b.canWinInOneMove() == up);
+	b.undo(m, true);
+	b.play(Board::LEFT);
+	b.play(up ? Board::RIGHT_UP : Board::RIGHT_DOWN);
+	assert(b.canWinInOneMove() == up);
 }
 
 void testGoalPostMoves(const DirId postDir, const size_t qty) {
@@ -93,26 +112,30 @@ int main() {
 	assert(c.getMoves().size() == 2);
 
 	puts("\nTest left corner of upper goalpost");
-	testGoalPost(Board::UP, Board::LEFT_UP, true);
+	testGoalPost(Board::UP, 5, Board::LEFT_UP, true, true, false);
 
 	puts("\nTest middle of upper goalpost");
-	testGoalPost(Board::UP, Board::UP, true);
+	testGoalPost(Board::UP, 5, Board::UP, true, true, false);
 
 	puts("\nTest right corner of upper goalpost");
-	testGoalPost(Board::UP, Board::RIGHT_UP, true);
+	testGoalPost(Board::UP, 5, Board::RIGHT_UP, true, true, false);
 
 	puts("\nTest left corner of lower goalpost");
-	testGoalPost(Board::DOWN, Board::LEFT_DOWN, false);
+	testGoalPost(Board::DOWN, 5, Board::LEFT_DOWN, false, true, false);
 
 	puts("\nTest middle of lower goalpost");
-	testGoalPost(Board::DOWN, Board::DOWN, false);
+	testGoalPost(Board::DOWN, 5, Board::DOWN, false, true, false);
 
 	puts("\nTest right corner of lower goalpost");
-	testGoalPost(Board::DOWN, Board::RIGHT_DOWN, false);
+	testGoalPost(Board::DOWN, 5, Board::RIGHT_DOWN, false, true, false);
 
 	puts("\nTest top-left border");
 	testTopBottomBorder(Board::UP, Board::LEFT, Board::LEFT);
 	testTopBottomBorder(Board::UP, Board::LEFT, Board::UP);
+
+	puts("\nTest canWinInOneMove");
+	testCanWinInOneMove(true);
+	testCanWinInOneMove(false);
 
 	puts("\nTest top goalpost moves available");
 	testGoalPostMoves(Board::UP, 7);
