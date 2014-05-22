@@ -48,13 +48,13 @@ DirId GraphMCTSAI::generateMove() {
 
 	auto moves = board.getMoves();
 	double best = 0.0;
-	DirId res;
+	DirId res = -1;
 	MCTSStatus* iter;
 	for (const auto& m: moves) {
 		iter = getEdge(board.getMoveHash(m));
 		double tmp = (double)iter->wins / iter->plays;
 		printDebug("Possible (edge): %d -> %.3lf (%lu/%lu)\n", m, tmp, iter->wins, iter->plays);
-		if (tmp > best) {
+		if (res == -1 || tmp > best) {
 			best = tmp;
 			res = m;
 		}
