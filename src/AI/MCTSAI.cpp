@@ -68,7 +68,7 @@ bool MCTSAI::randomPlayout(Board& s) {
 	bool result;
 	int id;
 
-	while (!s.isGameFinished()) {
+	while (!s.isGameFinished() && !s.canWinInOneMove()) {
 		if (!isTimeLeft())
 			break;
 		moves = s.getMoves();
@@ -76,7 +76,10 @@ bool MCTSAI::randomPlayout(Board& s) {
 		playHistory.push({moves[id], s.play(moves[id])});
 	}
 
-	result = s.doesRedWin();
+	if (s.isGameFinished())
+		result = s.doesRedWin();
+	else
+		result = s.isRedActive();
 
 	while (!playHistory.empty()) {
 		elem = playHistory.top();
